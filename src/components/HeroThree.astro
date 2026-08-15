@@ -1,0 +1,443 @@
+---
+// GPU-accelerated animated hero background built with Three.js: soft purple
+// metaballs drift and morph across the hero, echoing the site's blob aesthetic.
+// Mount this inside a hero section that has `position: relative; overflow: clip;`
+// and a `position: relative` content wrapper so text paints above the canvas.
+---
+
+<canvas class="hero-three" aria-hidden="true"></canvas>
+
+<style>
+    .hero-three {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+</style>
+
+<script>
+    import {Mesh, OrthographicCamera, PlaneGeometry, Scene, ShaderMaterial, Vector2, Vector3, Vector4, WebGLRenderer} from 'three';
+
+    const VERTEX = /* glsl */ `
+        void main() {
+            gl_Position = vec4(position, 1.0);
+        }
+    `;
+
+    const FRAGMENT = /* glsl */ `
+        precision highp float;
+
+        uniform float uTime;
+        uniform vec2 uRes;
+        // uShips[i] = (x fraction, speed, phase, scale)
+        uniform vec4 uShips[6];
+        uniform vec3 uColors[6];
+        uniform float uShipScale;
+        uniform int uShipCount;
+        // Feel-adjustable curve: depth easing exponent (linger vs sweep),
+        // orbit-plane bob amplitude, glow radius, and glow brightness
+        // gain, tuned from JS without touching the shader.
+        uniform float uDepthExponent;
+        uniform float uBobAmplitude;
+        uniform float uGlowRadius;
+        uniform float uGlowAmplitude;
+
+        float sdCircle(vec2 p, float r) {
+            return length(p) - r;
+        }
+
+        float sdEllipse(vec2 p, vec2 c, vec2 r) {
+            return length((p - c) / r) - 1.0;
+        }
+
+        float sdCapsule(vec2 p, vec2 a, vec2 b, float r) {
+            vec2 pa = p - a;
+            vec2 ba = b - a;
+            float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+            return length(pa - ba * h) - r;
+        }
+
+        float sdTriangle(vec2 p, vec2 p0, vec2 p1, vec2 p2) {
+            vec2 e0 = p1 - p0;
+            vec2 e1 = p2 - p1;
+            vec2 e2 = p0 - p2;
+            vec2 v0 = p - p0;
+            vec2 v1 = p - p1;
+            vec2 v2 = p - p2;
+            vec2 pq0 = v0 - e0 * clamp(dot(v0, e0) / dot(e0, e0), 0.0, 1.0);
+            vec2 pq1 = v1 - e1 * clamp(dot(v1, e1) / dot(e1, e1), 0.0, 1.0);
+            vec2 pq2 = v2 - e2 * clamp(dot(v2, e2) / dot(e2, e2), 0.0, 1.0);
+            float s = sign(e0.x * e2.y - e0.y * e2.x);
+            vec2 d = min(min(vec2(dot(pq0, pq0), s * (v0.x * e0.y - v0.y * e0.x)),
+                             vec2(dot(pq1, pq1), s * (v1.x * e1.y - v1.y * e1.x))),
+                         vec2(dot(pq2, pq2), s * (v2.x * e2.y - v2.y * e2.x)));
+            return -sqrt(d.x) * sign(d.y);
+        }
+
+        // Eased depth (0..1): one full cycle per orbit, raised to the
+        // uDepthExponent power so the ship lingers at the far point and
+        // sweeps quickly through the near point. Shared by the orbit-plane
+        // bob, the size/fade, and the approach glow so they all move with
+        // one motion profile.
+        float depthAt(float loop) {
+            return pow(0.5 + 0.5 * sin(loop * 6.2831853), uDepthExponent);
+        }
+
+        // Position of the ship at unwrapped loop time (loop) and phase (t),
+        // on the slowly precessing elliptical orbit.
+        vec2 orbitPos(vec4 s, float aspect, float loop, float t) {
+            float cx = (s.x - 0.5) * aspect * 0.9;
+            float ax = 0.42 * aspect;
+            float ay = 0.38;
+            float precess = (loop / s.y) * 0.18;
+            float ca = cos(precess);
+            float sa = sin(precess);
+            vec2 local = vec2(ax * cos(6.2831853 * t), ay * sin(6.2831853 * t));
+            // Bob the orbit plane with the same eased profile as the depth:
+            // the ship parks low during the far linger and rises quickly into
+            // the near point, so the arc, the scale, and the glow all swell
+            // together as one 3D approach.
+            float bob = uBobAmplitude * s.w * (2.0 * depthAt(loop) - 1.0);
+            return vec2(ca * local.x - sa * local.y,
+                        sa * local.x + ca * local.y) + vec2(cx, bob);
+        }
+
+        // Draws one procedural spaceship, a sleek, elongated hull with a sharp
+        // pointed nose and swept rear fins. The ship loops along a smooth,
+        // slowly precessing ellipse and banks to face its direction of travel.
+        void drawShip(vec2 p, int i, out vec3 col, out float alpha) {
+            vec4 s = uShips[i];
+            float aspect = uRes.x / min(uRes.x, uRes.y);
+
+            // Unwrapped loop time + phase 0..1, the orbit is a closed curve,
+            // so the motion stays seamless when the phase wraps around.
+            float loop = uTime * s.y + s.z;
+            float t = fract(loop);
+            float ang = t * 6.2831853;
+
+            vec2 pos = orbitPos(s, aspect, loop, t);
+
+            // Finite-difference velocity. Bank the ship to face travel direction.
+            vec2 vel = orbitPos(s, aspect, loop + 0.02, fract(t + 0.02))
+                     - orbitPos(s, aspect, loop - 0.02, fract(t - 0.02));
+            float rot = atan(-vel.x, vel.y) + sin(uTime * 0.7 + s.z * 3.0) * 0.05;
+
+            vec2 q0 = p - pos;
+            float c = cos(rot);
+            float sn = sin(rot);
+
+            // Depth oscillation: one full approach/retreat cycle per orbit,
+            // driven by the ship's own speed and phase (loop = uTime * s.y +
+            // s.z), so multi-ship scenes pulse independently. Shared with
+            // the orbit bob via depthAt() so both move with one profile.
+            float depth = depthAt(loop);
+            float sizeF = 0.75 + 0.5 * depth;   // 0.75 .. 1.25
+            float fadeF = 0.25 + 0.75 * depth;  // 0.25 .. 1.00
+
+            vec2 q = mat2(c, -sn, sn, c) * q0 / (s.w * uShipScale * sizeF);
+
+            vec3 base = uColors[i];
+
+            // Elongated rounded hull + sharp nose + swept rear fins
+            float body = sdCapsule(q, vec2(0.0, -0.05), vec2(0.0, 0.10), 0.045);
+            float nose = sdTriangle(q, vec2(0.0, 0.22), vec2(-0.045, 0.10), vec2(0.045, 0.10));
+            float finL = sdTriangle(q, vec2(-0.045, -0.02), vec2(-0.095, -0.07), vec2(-0.045, -0.085));
+            float finR = sdTriangle(q, vec2(0.045, -0.02), vec2(0.095, -0.07), vec2(0.045, -0.085));
+            float hull = min(min(body, nose), min(finL, finR));
+            float hullA = 1.0 - smoothstep(0.0, 0.008, hull);
+            vec3 colAcc = base * hullA;
+
+            // Glowing cockpit window near the nose
+            float win = sdCircle(q - vec2(0.0, 0.045), 0.013);
+            float winA = 1.0 - smoothstep(0.0, 0.006, win);
+            colAcc += winA * (base * 1.2 + vec3(0.45, 0.35, 0.75));
+
+            // Pulsing side lights on the hull
+            float pulse = 0.55 + 0.45 * sin(uTime * 6.0 + s.z * 5.0);
+            float la1 = 1.0 - smoothstep(0.0, 0.005, sdCircle(q - vec2(-0.028, -0.02), 0.006));
+            float la2 = 1.0 - smoothstep(0.0, 0.005, sdCircle(q - vec2(0.028, -0.02), 0.006));
+            float rimA = max(la1, la2);
+            colAcc += rimA * (vec3(0.78, 0.62, 1.0) * pulse);
+
+            // Flickering thruster flame
+            float flick = 0.8 + 0.2 * sin(uTime * 22.0 + s.z * 7.0);
+            float flame = sdEllipse(q, vec2(0.0, -0.095), vec2(0.014, 0.03 * flick));
+            float flameA = 1.0 - smoothstep(0.0, 0.012, flame);
+            vec3 flameCol = mix(vec3(0.91, 0.70, 1.0), vec3(0.75, 0.5, 1.0), flick);
+            colAcc += flameCol * flameA * 0.8;
+
+            // Subtle engine trail: short glow segments along the ship's past
+            // orbit positions, fading out with age.
+            vec3 trailCol = base * 0.9 + vec3(0.3, 0.25, 0.6);
+            float trailA = 0.0;
+            for (int k = 1; k <= 8; k++) {
+                float ft = float(k) * 0.018;
+                vec2 pa = orbitPos(s, aspect, loop - ft, fract(t - ft));
+                vec2 pb = orbitPos(s, aspect, loop - ft + 0.018, fract(t - ft + 0.018));
+                float fade = exp(-float(k) * 0.45) * 0.5;
+                float r = 0.024 * (s.w * uShipScale * sizeF) * (1.0 - 0.04 * float(k));
+                float segA = fade * (1.0 - smoothstep(0.0, 0.02, sdCapsule(p, pa, pb, r)));
+                trailA = max(trailA, segA);
+                colAcc += trailCol * segA;
+            }
+
+            // Soft radial glow behind the ship: it swells and brightens as
+            // the ship approaches (depth -> 1), replacing the ground shadow
+            // as the depth cue. It sits under the hull in the max-alpha
+            // composite, so the ship body paints over its center.
+            float glR = uGlowRadius * (s.w * uShipScale) * (0.8 + 0.5 * depth);
+            float gl = 1.0 - smoothstep(0.0, 1.0, length(p - pos) / glR);
+            float glowA = gl * (0.05 + uGlowAmplitude * depth);
+            // Saturated violet glow, keeps the halo purple and visible
+            // instead of washing white on light hull shades.
+            colAcc += (base * 0.5 + vec3(0.35, 0.25, 0.7)) * glowA;
+
+            float a = max(max(max(max(hullA, winA), max(rimA, flameA)), trailA), glowA);
+            alpha = a * fadeF;
+            col = colAcc / max(a, 1e-4);
+        }
+
+        // --- Parallax dust layer ---
+
+        float dustHash(vec2 p) {
+            vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+            p3 += dot(p3, p3.yzx + 33.33);
+            return fract((p3.x + p3.y) * p3.z);
+        }
+
+        vec2 dustHash2(vec2 p) {
+            vec3 p3 = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
+            p3 += dot(p3, p3.yzx + 33.33);
+            return fract((p3.xx + p3.yz) * p3.zy);
+        }
+
+        // Subtle dust field on fixed grid-hashed positions. Each mote has a
+        // depth layer; when the ship bobs toward the viewer the nearer motes
+        // shear away opposite to it, so the approach reads as motion through
+        // 3D space.
+        void drawDust(vec2 p, float t, out vec3 col, out float alpha) {
+            // Parallax driver: the eased bob of the first ship (-1 .. +1).
+            float bob = 2.0 * depthAt(uTime * uShips[0].y + uShips[0].z) - 1.0;
+            float cell = 0.17;
+            vec2 id = floor(p / cell);
+            col = vec3(0.95, 0.9, 1.0);
+            alpha = 0.0;
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    vec2 cid = id + vec2(float(dx), float(dy));
+                    for (int k = 0; k < 2; k++) {
+                        vec2 hp = dustHash2(cid * 1.7 + vec2(float(k) * 7.31, 3.13));
+                        if (hp.x > 0.72) {
+                            continue;
+                        }
+                        vec2 hl = dustHash2(cid * 3.1 - vec2(1.9, float(k) * 5.7));
+                        float layer = hl.x;                    // 0 far .. 1 near
+                        float size = mix(0.0025, 0.0075, layer);
+                        float bright = mix(0.10, 0.30, layer);
+                        vec2 pos = (cid + vec2(hp.y, hl.y) * 0.8 - 0.4) * cell;
+                        pos.y -= 0.05 * layer * bob;           // parallax vs ship
+                        float tw = 0.6 + 0.4 * sin(t * (1.5 + 2.0 * layer) + dustHash(cid + float(k) * 3.7) * 40.0);
+                        float d = length(p - pos);
+                        float dotA = (1.0 - smoothstep(0.0, size, d)) * bright * tw;
+                        alpha = max(alpha, dotA);
+                    }
+                }
+            }
+        }
+
+        void main() {
+            vec2 p = (gl_FragCoord.xy - 0.5 * uRes) / min(uRes.x, uRes.y);
+
+            // Dust behind the ships.
+            vec3 dustCol;
+            float dustA;
+            drawDust(p, uTime, dustCol, dustA);
+
+            vec3 shipCol = vec3(0.0);
+            float shipA = 0.0;
+            for (int i = 0; i < 6; i++) {
+                if (i >= uShipCount) {
+                    break;
+                }
+                vec3 ci;
+                float ai;
+                drawShip(p, i, ci, ai);
+                if (ai > shipA) {
+                    shipA = ai;
+                    shipCol = ci;
+                }
+            }
+
+            // Straight-alpha "ship over dust" composite: ships cover the dust.
+            float alpha = shipA + dustA * (1.0 - shipA);
+            vec3 col = (shipCol * shipA + dustCol * dustA * (1.0 - shipA)) / max(alpha, 1e-4);
+
+            // Global opacity multiplier so the ships sit quietly behind the hero text
+            alpha *= 0.6;
+            gl_FragColor = vec4(col, alpha);
+        }
+    `;
+
+    // The single spaceship: orbit center x as a fraction of the hero width,
+    // fly speed (one full orbit per 1/speed seconds), phase, and visual scale.
+    // The center x is randomized within a safe band (0.34..0.66) so the ship
+    // orbits around the left or right side instead of always flying through
+    // the center of the hero behind the headline; the phase is randomized so
+    // each load starts at a different orbit point and depth.
+    const SHIPS = [
+        {x: 0.34 + Math.random() * 0.32, speed: 0.1, phase: Math.random(), size: 1.0},
+    ];
+
+    // Reduced-motion users get a single static frame: a fixed center and
+    // phase park the ship at a pleasant, clearly visible orbit point
+    // (upper-right of the hero, mid-depth) instead of the random start.
+    const REDUCED_MOTION_X = 0.5;
+    const REDUCED_MOTION_PHASE = 0.15;
+
+    // Three.js requires JS uniform arrays to be exactly as long as the GLSL
+    // array (uShips[6]). Pad with zero slots that are never drawn, since the
+    // shader loop breaks early on uShipCount.
+    function padShips(ships: {x: number, speed: number, phase: number, size: number}[], overrides?: {x?: number, phase?: number}) {
+        const vecs = ships.map((s) => new Vector4(overrides?.x ?? s.x, s.speed, overrides?.phase ?? s.phase, s.size));
+        while (vecs.length < 6) vecs.push(new Vector4(0, 0, 0, 0));
+        return vecs;
+    }
+
+    // Purple spectrum: lavender, light violet, violet, fuchsia, deep purple, royal purple
+    const COLORS = [
+        new Vector3(0.914, 0.835, 1.0),
+        new Vector3(0.769, 0.710, 0.992),
+        new Vector3(0.655, 0.545, 0.98),
+        new Vector3(0.910, 0.475, 0.976),
+        new Vector3(0.486, 0.227, 0.93),
+        new Vector3(0.576, 0.200, 0.918),
+    ];
+
+    // Pick a saturated shade from the purple spectrum for the ship's hull,
+    // the lightest lavenders wash out against the pale hero background.
+    function randomPurple() {
+        const saturated = COLORS.slice(2); // violet, fuchsia, deep purple, royal purple
+        return saturated[Math.floor(Math.random() * saturated.length)];
+    }
+
+    function init() {
+        const canvasEl = document.querySelector<HTMLCanvasElement>('.hero-three');
+        if (!canvasEl || canvasEl.dataset.threeActive) return;
+        canvasEl.dataset.threeActive = '1';
+        const canvas: HTMLCanvasElement = canvasEl;
+
+        let renderer: WebGLRenderer;
+        try {
+            renderer = new WebGLRenderer({
+                canvas,
+                alpha: true,
+                antialias: true,
+                preserveDrawingBuffer: true,
+                powerPreference: 'high-performance'
+            });
+        } catch {
+            return; // WebGL unavailable, the CSS background still shows
+        }
+
+        renderer.setClearColor(0x000000, 0);
+
+        const scene = new Scene();
+        const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        const uniforms = {
+            uTime: {value: 0},
+            uRes: {value: new Vector2(1, 1)},
+            // Static frame for reduced-motion users parks the ship at the
+            // fixed pleasant center and phase; everyone else gets the random
+            // center band and start phase.
+            uShips: {value: padShips(SHIPS, reduceMotion ? {x: REDUCED_MOTION_X, phase: REDUCED_MOTION_PHASE} : undefined)},
+            // Copy so each view gets its own randomly picked purple hull.
+            uColors: {value: (() => {
+                const colors = COLORS.slice();
+                colors[0] = randomPurple();
+                return colors;
+            })()},
+            uShipScale: {value: 0.7},
+            // Eased-depth exponent (higher = deeper far-point linger),
+            // bob amplitude, glow radius, and glow brightness gain.
+            uDepthExponent: {value: 3.0},
+            uBobAmplitude: {value: 0.04},
+            uGlowRadius: {value: 0.32},
+            uGlowAmplitude: {value: 0.35},
+            uShipCount: {value: 1},
+        };
+
+        const geometry = new PlaneGeometry(2, 2);
+        const material = new ShaderMaterial({
+            vertexShader: VERTEX,
+            fragmentShader: FRAGMENT,
+            uniforms,
+            transparent: true,
+            depthWrite: false,
+        });
+        scene.add(new Mesh(geometry, material));
+
+        const startTime = performance.now();
+        let raf = 0;
+        let observer: ResizeObserver | null = null;
+
+        // A single ship on every screen; it stays a little smaller on mobile
+        // and reads as a larger centerpiece on big desktop displays.
+        function applyResponsive() {
+            const width = window.innerWidth;
+            if (width <= 680) {
+                uniforms.uShipScale.value = 0.5;
+            } else if (width >= 1440) {
+                uniforms.uShipScale.value = 0.9;
+            } else {
+                uniforms.uShipScale.value = 0.7;
+            }
+            uniforms.uShipCount.value = 1;
+        }
+
+        function resize() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = Math.max(1, Math.round(canvas.clientWidth * dpr));
+            const h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+            renderer.setSize(w, h, false);
+            uniforms.uRes.value.set(w, h);
+            applyResponsive();
+        }
+
+        function tick() {
+            if (!canvas.isConnected) {
+                stop();
+                return;
+            }
+            uniforms.uTime.value = (performance.now() - startTime) / 1000;
+            renderer.render(scene, camera);
+            raf = requestAnimationFrame(tick);
+        }
+
+        function stop() {
+            cancelAnimationFrame(raf);
+            observer?.disconnect();
+            geometry.dispose();
+            material.dispose();
+            renderer.dispose();
+        }
+
+        resize();
+        if (reduceMotion) {
+            renderer.render(scene, camera); // single static frame
+        } else {
+            tick();
+        }
+
+        observer = new ResizeObserver(resize);
+        observer.observe(canvas);
+    }
+
+    init();
+    document.addEventListener('astro:page-load', init);
+</script>

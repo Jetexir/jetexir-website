@@ -1,0 +1,100 @@
+---
+// Import the global.css file here so that it is included on
+// all pages through the use of the <BaseHead /> component.
+import {ClientRouter} from "astro:transitions";
+import {SITE_TITLE} from '../consts';
+
+interface Props {
+    title: string;
+    description: string;
+    image?: string;
+    current?: string;
+    robots?: string;
+}
+
+const DEFAULT_IMAGE = '/images/og-default.png';
+const ROBOTS_DEFAULT = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+const {title, description, current, image = DEFAULT_IMAGE, robots = ROBOTS_DEFAULT} = Astro.props;
+
+// Keep titles short for search results: don't append the brand when the
+// title already contains it (e.g. "Jetexir for WooCommerce").
+const pageTitle = title.includes(SITE_TITLE) ? title : `${title} - ${SITE_TITLE}`;
+
+// Schema.org image URLs must be absolute; resolve against the site URL.
+const absoluteImage = new URL(image, Astro.site ?? Astro.url).href;
+
+// The homepage is the only page that describes the Jetexir product itself;
+// emitting a SoftwareApplication block on every page (including the 404)
+// gives search engines misleading entity data.
+const isSoftwarePage = current === 'home';
+const schema = isSoftwarePage ? {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Jetexir",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "WordPress",
+    "description": description,
+    "image": absoluteImage,
+    "url": new URL('/', Astro.site ?? Astro.url).href,
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Jetexir",
+        "url": Astro.site
+    }
+} : null;
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8"/>
+<meta name="viewport"
+      content="width=device-width, user-scalable=1, initial-scale=1.0, maximum-scale=5, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name='robots' content={robots}/>
+<meta name="theme-color" content="#FFFFFF">
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="sitemap" href="/sitemap-index.xml"/>
+<meta name="generator" content={Astro.generator}/>
+
+<link href="/css/style.min.css" rel="stylesheet">
+
+<!-- Canonical URL -->
+<link rel="canonical" href={Astro.url}/>
+
+<!-- Primary Meta Tags -->
+<title>{pageTitle}</title>
+<meta name="description" content={description}/>
+
+<meta property="og:locale" content="en_US"/>
+<meta property="og:site_name" content={SITE_TITLE}/>
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content={Astro.url}/>
+<meta property="og:title" content={pageTitle}/>
+<meta property="og:description" content={description}/>
+<meta property="og:image" content={absoluteImage}/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content={pageTitle}/>
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content={pageTitle}/>
+<meta name="twitter:description" content={description}/>
+<meta name="twitter:image" content={absoluteImage}/>
+
+{schema &&
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}/>}
+
+<ClientRouter/>

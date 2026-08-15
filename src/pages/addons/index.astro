@@ -1,0 +1,114 @@
+---
+import {getCollection} from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AddonCard from "../../components/AddonCard.astro";
+import HeroBackground from "../../components/HeroBackground.astro";
+
+const addons = (await getCollection("addons")).sort((a, b) => a.data.order - b.data.order);
+
+// Group addons by category, keeping each category's addons in order.
+// Categories themselves are ordered by their earliest addon's order value.
+const categoryOrder = new Map();
+addons.forEach((addon) => {
+    if (!categoryOrder.has(addon.data.category)) {
+        categoryOrder.set(addon.data.category, addon.data.order);
+    }
+});
+const categories = [...categoryOrder.keys()].sort((a, b) => categoryOrder.get(a) - categoryOrder.get(b));
+
+const title = 'Jetexir Addons';
+const description = 'Explore the addons and features that make Jetexir the enhancement suite for WooCommerce.';
+---
+
+<BaseLayout title={title} description={description} current="addons">
+    <section class="page-hero">
+        <HeroBackground/>
+        <div class="container">
+            <h1 class="page-title">Jetexir Addons</h1>
+            <p class="page-subtitle">
+                A complete set of tools to enhance your WooCommerce store, from visual polish to checkout optimization.
+            </p>
+        </div>
+    </section>
+
+    <section class="container addons-content">
+        {categories.map((category) => {
+            const categoryAddons = addons.filter((addon) => addon.data.category === category);
+            return (
+                    <div class="addon-group">
+                        <h2 class="category-title">{category}</h2>
+                        <div class="addon-grid">
+                            {categoryAddons.map((addon) => (
+                                    <AddonCard addon={addon}/>
+                            ))}
+                        </div>
+                    </div>
+            );
+        })}
+    </section>
+</BaseLayout>
+
+<style>
+    .page-hero {
+        position: relative;
+        overflow: clip;
+        padding: 5rem 0 3rem;
+        text-align: center;
+    }
+
+    .page-hero .container {
+        position: relative;
+    }
+
+    .page-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: -0.03em;
+        margin: 0 0 1rem;
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        max-width: 42rem;
+        margin: 0 auto;
+        font-size: 1.1rem;
+    }
+
+    .addons-content {
+        margin-top: 2rem;
+        padding-bottom: 4rem;
+    }
+
+    .addon-group {
+        margin-bottom: 3.5rem;
+    }
+
+    .addon-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .category-title {
+        font-size: 1.5rem;
+        letter-spacing: -0.02em;
+        margin: 0 0 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .addon-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 1000px) {
+        .addon-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 640px) {
+        .addon-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

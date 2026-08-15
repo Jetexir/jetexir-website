@@ -1,0 +1,128 @@
+@use "variables" as *;
+
+sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+cite {
+  font-style: italic;
+}
+
+abbr {
+  display: inline;
+}
+
+abbr[title], acronym[title] {
+  text-decoration: none;
+  border-bottom: 1px dotted $text__color;
+}
+
+pre {
+  max-width: 100%;
+  display: block;
+  font-family: monospace, sans-serif;
+  white-space: pre-wrap; /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+  margin: 1em 0;
+  border-radius: 5px;
+  corner-shape: squircle;
+  padding: 10px;
+}
+
+code {
+  font-family: monospace, sans-serif;
+  background-color: #fff9e0;
+  padding: 2px;
+}
+
+blockquote {
+  display: block;
+  border-radius: 5px;
+  corner-shape: squircle;
+  background: $bg__color;
+  border-left: 10px solid $border__color;
+  margin: 1.5em 10px;
+  padding: 1em;
+  quotes: "\201C""\201D""\2018""\2019";
+
+  p {
+    text-wrap: balance;
+    margin-bottom: 20px;
+
+    &:before, &:after {
+      color: $border__color;
+      font-size: 4em;
+      line-height: 0.1em;
+      vertical-align: -0.4em;
+    }
+
+    &:before {
+      content: open-quote;
+      margin-right: 0.25em;
+    }
+
+    &:after {
+      content: close-quote;
+      margin-left: 0.25em;
+    }
+  }
+
+  cite {
+    display: inline-block;
+    margin-top: 20px;
+    color: $soft_text__color;
+  }
+}
+
+fieldset {
+  border: 1px solid $border__color;
+  padding: 15px;
+  border-radius: 5px;
+  corner-shape: squircle;
+
+  legend {
+    background-color: $bg__color;
+    padding: 3px 6px;
+    border-radius: 5px;
+    corner-shape: squircle;
+    font-weight: bold;
+  }
+}
+
+figure {
+  border: 1px solid $border__color;
+  margin: 0 auto;
+  border-radius: 5px;
+  corner-shape: squircle;
+  overflow: hidden;
+  display: inline-block;
+
+  figcaption {
+    background-color: $bg__footer;
+    color: $soft_white__color;
+    font-style: italic;
+    padding: 2px;
+    text-align: center;
+  }
+}
+
+ul, ol {
+  li {
+    margin-bottom: 15px;
+
+    ol, ul {
+      li {
+        margin-bottom: 5px;
+      }
+    }
+  }
+}

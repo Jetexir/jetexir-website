@@ -1,0 +1,218 @@
+[
+  {
+    "title": "Sale Badges",
+    "description": "Product labels grab attention, and the right sale badge can be the difference between a browser and a buyer. Jetexir lets you place striking, customizable sale badges on top of your product images so promotions are impossible to miss.\n\nShow the discount as a bold percentage (\"-20%\") or as a fixed amount (\"Save $12\"), choose the badge shape, colors, and wording, and position it exactly where you want on both shop archives and single product pages. Sale badges apply automatically to any product on sale, so your storefront always looks polished without manual work.",
+    "summary": "Customize how sale badges look on your products to attract attention and drive urgency.",
+    "category": "Product",
+    "features": [
+      "Display the discount as a percentage sale badge (e.g. \"-20%\")",
+      "Present discounts as fixed amounts (\"Save $12\") too",
+      "Style badge text, colors, and shape to match your brand",
+      "Position the badge anywhere on the product image"
+    ]
+  },
+  {
+    "title": "Price Variations",
+    "description": "By default, WooCommerce shows variable products as a confusing range, \"$49 – $99\", which leaves customers guessing what they'll actually pay. Price Variations puts you in control of exactly how those prices are presented on both shop and product pages.\n\nDisplay the full range in either direction, show just the lowest or just the highest price, or clarify the range with a \"From:\" or \"Up To:\" prefix. Every format keeps your pricing transparent, builds trust, and removes the guesswork from the buying decision.",
+    "summary": "Show variable product prices the way you want, ranges, single prices, or with clear \"From\" prefixes.",
+    "category": "Product",
+    "features": [
+      "Choose from multiple variation price display formats",
+      "Show only the lowest or only the highest price",
+      "Show price as a range, minimum to maximum or maximum to minimum",
+      "Add a \"From:\" prefix before the minimum price",
+      "Add an \"Up To:\" prefix before the maximum price",
+      "Remove the \"clear\" link from the price display"
+    ]
+  },
+  {
+    "title": "Product Comparison",
+    "description": "Help customers make confident buying decisions with a simple, effective product comparison tool. Shoppers add products to a comparison table with one click and review features, prices, and specifications side by side on a dedicated page.\n\nYou decide how it works: which attributes get compared, what the buttons say, and how the buttons and compare page look. Comparing options side by side reduces hesitation and gets customers to a purchase faster.",
+    "summary": "Let shoppers compare products side by side and choose the option that fits them best.",
+    "category": "Product",
+    "features": [
+      "Add to compare button on product pages",
+      "Dedicated compare page to review products side by side",
+      "Choose which attributes appear in the comparison",
+      "Set custom text on the compare buttons",
+      "Customize the buttons and compare page to match your brand"
+    ]
+  },
+  {
+    "title": "Wishlist",
+    "description": "Give shoppers a reason to return with a powerful wishlist feature. Customers can save products they like, review everything on a dedicated wishlist page, and move items straight into the cart whenever they're ready.\n\nYou control where the wishlist button appears, before or after the \"Add to cart\" button, or above the product thumbnail, and which icon it uses. Once an order is placed, purchased products are removed from the wishlist automatically, so saved lists stay clean and relevant.",
+    "summary": "Let customers save products they love and come back to buy them later.",
+    "category": "Product",
+    "features": [
+      "Wishlist button on shop and product pages",
+      "Position it before or after \"Add to cart\", or above the thumbnail",
+      "Dedicated page showing all saved products",
+      "Choose the button icon from available options",
+      "Auto-remove purchased products from the wishlist after checkout",
+      "Convert saved products to cart in one click"
+    ]
+  },
+  {
+    "title": "Social Sharing",
+    "description": "Word of mouth is one of the most powerful sales tools. Social Sharing adds actionable social icons to your single product pages so customers can share your products across their networks with a single click.\n\nChoose which platforms appear, control the icon content and styling to fit your design, and even offer a one-click \"copy link\" option. Every share brings free, authentic exposure, reinforcing your brand while driving new visitors back to your store.",
+    "summary": "Let customers promote your products across social networks in a single click.",
+    "category": "Product",
+    "features": [
+      "One-click sharing for every product",
+      "Buttons for Facebook, X, WhatsApp, and more",
+      "Select which social icons appear",
+      "Control the content and appearance of the icons",
+      "Copy the product link to the clipboard in one click"
+    ]
+  },
+  {
+    "title": "FAQ Section",
+    "description": "Frequently asked questions belong where customers are deciding. The FAQ addon lets you create and display a clean, collapsible FAQ section on any product page, so shoppers find answers in seconds instead of contacting support.\n\nAdd unlimited questions per product, or apply a common set of FAQs across all products at once. Answering objections up front builds trust, reduces pre-sale questions, and keeps buyers moving toward checkout, all without slowing down your site.",
+    "summary": "Answer common questions right on the product page and remove purchase hesitation.",
+    "category": "Product",
+    "features": [
+      "Create and manage FAQs for each product",
+      "Add the same FAQs to all products at once",
+      "Collapsible accordion for clean navigation",
+      "No coding required",
+      "Lightweight and compatible with most themes"
+    ]
+  },
+  {
+    "title": "Related Products",
+    "description": "Displaying the right products at the right moment increases basket size. Related Products gives you full control over which products appear on your single product pages, by category, tag, attribute, or as a hand-picked selection for each product.\n\nReplace WooCommerce's default related products with your own choices, present them as a polished slider or a grid, and guide customers toward complementary items that keep them browsing and buying.",
+    "summary": "Keep shoppers exploring your catalog with smart, attractive related product blocks.",
+    "category": "Product",
+    "features": [
+      "Disable WooCommerce's default related products",
+      "Show related products by category, tag, or attribute",
+      "Hand-pick specific products to display instead",
+      "Display related products as a slider",
+      "Control how many products appear and the layout"
+    ]
+  },
+  {
+    "title": "Call for Price",
+    "description": "Not every store shows prices publicly. Call for Price lets you replace the price and add-to-cart button with a custom \"Call for price\" prompt that links to your contact, booking, or quoting channel.\n\nYou can also set distinct messaging for products with empty, zero, or out-of-stock prices, and the sale tag is automatically hidden whenever no price is displayed. Whether you run a B2B catalogue, sell by negotiation, or offer quote-based services, your store stays professional and your leads come directly to you.",
+    "summary": "Hide prices and prompt customers to contact you for the best offer.",
+    "category": "Product",
+    "features": [
+      "Display a \"Call for price\" button on the product page",
+      "Custom text for products with empty, zero, or out-of-stock prices",
+      "Automatically hide the sale tag on products with empty prices",
+      "Perfect for quote-based and B2B catalogues"
+    ]
+  },
+  {
+    "title": "Quantity Fields",
+    "description": "The opposite of one-size-fits-all, Quantity Fields adapts the quantity input to your real business rules. Add clear plus and minus buttons, enforce minimum orders, cap maximum quantities, and control the step customers can increment by.\n\nStyle the field and buttons to match your theme, disable the quantity controls entirely on the product page, or enforce \"Sold individually\" across all products in a single setting. Whether you sell per meter, per pack, or per case, everything stays consistent with your fulfillment process.",
+    "summary": "Customize product quantity inputs to match the way your inventory actually works.",
+    "category": "Product",
+    "features": [
+      "Plus and minus buttons on the quantity field",
+      "Control the minimum, maximum, and step values",
+      "Custom styling for the field and its buttons",
+      "Disable the quantity field and buttons on the product page",
+      "Set \"Sold individually\" for all products at once"
+    ]
+  },
+  {
+    "title": "Fly Cart",
+    "description": "Reduce abandonment with a shopping experience that never interrupts the customer. Fly Cart slides in instantly whenever a product is added to the cart, with both AJAX and standard Add to Cart buttons, showing the full summary and a direct path to checkout.\n\nMatch it to your store by choosing the cart icon and position, and decide exactly where it appears: home, blog, posts, cart, checkout, or product pages. Shoppers keep browsing without friction and return to their cart whenever they're ready.",
+    "summary": "A fast, elegant slide-in cart that keeps customers shopping without leaving the page.",
+    "category": "Cart",
+    "features": [
+      "Works with both AJAX and standard Add to Cart buttons",
+      "Slide-out cart with an instant summary",
+      "Choose your own fly cart icon and position",
+      "Show or hide the fly cart per page (home, blog, posts, cart, checkout, product)",
+      "Go to checkout in one click"
+    ]
+  },
+  {
+    "title": "Menu Cart",
+    "description": "Keep the shopping cart always within reach. Menu Cart adds a beautiful cart indicator to your navigation that shows the live item count at a glance, so customers never have to hunt for their basket.\n\nA dropdown preview gives a quick peek at the current contents, and one click takes shoppers straight to checkout. You control what the dropdown shows and how it's styled, and it works with any menu position in your theme.",
+    "summary": "A polished cart icon in your menu that always shows the current basket total.",
+    "category": "Cart",
+    "features": [
+      "Cart icon with a live product count in the menu",
+      "Dropdown preview of the current cart",
+      "Control the cart content and style",
+      "Works with any menu position"
+    ]
+  },
+  {
+    "title": "Checkout Fields",
+    "description": "Checkout should feel effortless. Checkout Fields gives you complete control over the checkout form. Add the fields your business needs, edit or rename existing ones, remove the ones you never use, and reorder everything for a natural flow.\n\nAdd custom fields conditionally so shoppers only see what's relevant, and validate inputs to keep orders clean and accurate. A simpler checkout means fewer abandoned carts and better order data from the very start.",
+    "summary": "Shape your checkout to collect exactly the information your business needs.",
+    "category": "Checkout",
+    "features": [
+      "Add, edit, or remove checkout fields",
+      "Reorder fields for a logical, effortless flow",
+      "Add custom fields conditionally",
+      "Validate fields for cleaner, more accurate orders"
+    ]
+  },
+  {
+    "title": "Custom Order Statuses",
+    "description": "WooCommerce's built-in statuses don't fit every workflow. Custom Order Statuses lets you define exactly the steps your orders go through, from \"Pending Review\" to \"Shipped via Courier\", and rename existing statuses so they match how you actually work.\n\nControl the behavior of your workflow too: choose the default order status, the fallback status used when an order is deleted, and the default status for orders paid via the \"Check payments\" method. Color-code each status with a custom admin background so your team can read the order queue at a glance.",
+    "summary": "Model your order workflow with statuses that match your real business process.",
+    "category": "Order",
+    "features": [
+      "Create unlimited custom order statuses",
+      "Set the default order status and the fallback \"delete order\" status",
+      "Set the default status for the \"Check payments\" method",
+      "Color-code statuses with a custom admin background color",
+      "Rename statuses to match your workflow"
+    ]
+  },
+  {
+    "title": "Announcement Bar",
+    "description": "Turn your store's top into a marketing channel. The Announcement Bar displays fully customizable messages, flash sales, free shipping thresholds, or brand updates, right where customers can't miss them.\n\nCreate as many bars as you need, each with its own content and style, and control exactly where each one appears with display conditions based on pages, categories, or products. Simple to configure, easy to keep on brand, and always in front of the right shoppers.",
+    "summary": "Broadcast promotions and important notices with stylish, targeted announcement bars.",
+    "category": "Customizations",
+    "features": [
+      "Create multiple announcement bars with different content and styles",
+      "Show bars on your desired pages only",
+      "Set display conditions per bar (specific pages, categories, or products)",
+      "Great for flash sales, shipping info, and news"
+    ]
+  },
+  {
+    "title": "Currency Symbols",
+    "description": "Every market formats money differently. Currency Symbols lets you replace WooCommerce's default currency symbol with your own, including a custom icon, and control how prices are formatted across the store.\n\nSet your preferred decimals and thousands separators so every price reads naturally for your local audience, and keep the entire storefront consistent with the currency presentation your customers expect.",
+    "summary": "Display prices with your own currency symbol, icon, and formatting.",
+    "category": "Customizations",
+    "features": [
+      "Change the currency symbol for your whole store",
+      "Set a custom icon for the currency symbol",
+      "Custom price formatting",
+      "Localized decimals and thousands separators"
+    ]
+  },
+  {
+    "title": "Sale Progress Bar",
+    "description": "Turn a sale into a compelling story. The Sale Progress Bar displays a live progress indicator on products that are on sale, showing exactly how many units have been sold and how many are still available.\n\nShoppers act when they sense scarcity. Seeing \"32 of 50 sold\" next to a discounted product creates genuine urgency, encouraging customers to buy now instead of coming back later and finding it gone. The bar appears automatically on products on sale, and works perfectly for flash sales, seasonal discounts, and limited-stock launches.",
+    "summary": "Show how much of a sale has sold and how much stock is left to create real urgency.",
+    "category": "Product",
+    "features": [
+      "Display a sales progress bar on the product page",
+      "Show the number of products sold and stock remaining",
+      "Auto-applies to products currently on sale",
+      "Great for flash sales and limited-stock campaigns"
+    ]
+  },
+  {
+    "title": "Order Numbers",
+    "description": "Stop explaining your order numbers to customers. Order Numbers replaces WooCommerce's default random order IDs with clean, sequential numbers, 1001, 1002, 1003, in exactly the format your business needs.\n\nAdd a prefix like \"JX-\", include the date, or keep it plain: pick a template (number only, prefix & number, date & number, and more), set your own starting number, and control the increment. Existing orders are reformatted too, so every order across your store follows the same consistent, professional sequence. With order tracking enabled, you can pull up any order's details in seconds.",
+    "summary": "Organize your orders with clean, sequential numbers in a format that makes sense for your store.",
+    "category": "Order",
+    "features": [
+      "Sequential order numbers for every new order",
+      "Custom starting number and increment",
+      "Add a prefix, date, or both to the order number",
+      "Choose from multiple order number templates",
+      "Enable order tracking to find order details fast"
+    ]
+  }
+]

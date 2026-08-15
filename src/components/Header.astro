@@ -1,0 +1,252 @@
+---
+import {Icon} from "astro-icon/components";
+
+const {current} = Astro.props;
+const navItems = [
+    {name: 'Home', href: '/'},
+    {name: 'Addons', href: '/addons'},
+    {name: 'Blog', href: '/blog'},
+    {name: 'About', href: '/about'},
+];
+---
+
+<header class="site-header">
+    <div class="container nav-wrap">
+        <a href="/" class="logo">
+            <span class="logo-mark"><Icon name="jetexir" height="26" width="26"/></span>
+            <span class="logo-name">Jetexir</span>
+        </a>
+
+        <nav class="nav" aria-label="Main navigation">
+            <ul>
+                {navItems.map((item) => (
+                        <li>
+                            <a href={item.href} class:list={['nav-link', {'is-active': current === item.name.toLowerCase()}]}
+                               data-astro-prefetch>{item.name}</a>
+                        </li>
+                ))}
+            </ul>
+        </nav>
+
+        <div class="header-cta">
+            <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode"
+                    title="Toggle dark mode">
+                <Icon name="moon" class="icon-moon" height="20" width="20"/>
+                <Icon name="sun" class="icon-sun" height="20" width="20"/>
+            </button>
+            <a href="https://wordpress.org/plugins/jetexir/" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+                <Icon name="wordpress" height="16" width="16"/> Download
+            </a>
+            <button class="nav-toggle" aria-label="Toggle navigation" data-menu-toggle>
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<style>
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--header-bg, rgba(13, 17, 28, 0.92));
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border, #e5e7eb);
+    }
+
+    .nav-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        min-height: var(--header-height, 68px);
+    }
+
+    .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.02em;
+        font-size: 1.25rem;
+    }
+
+    .logo-mark {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 1.05rem;
+    }
+
+    .nav ul {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav ul li {
+        margin: 0;
+    }
+
+    .nav-link {
+        display: inline-block;
+        padding: 0.5rem 0.9rem;
+        border-radius: 8px;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.is-active {
+        color: var(--text);
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .header-cta {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+        color: var(--primary);
+        border-color: var(--primary);
+        background: var(--icon-bg);
+    }
+
+    .theme-toggle :global(svg) {
+        flex: 0 0 auto;
+    }
+
+    /* Show the moon in light mode (tap for dark), the sun in dark mode. */
+    .theme-toggle :global(.icon-sun) {
+        display: none;
+    }
+
+    html[data-theme="dark"] .theme-toggle :global(.icon-sun) {
+        display: block;
+    }
+
+    html[data-theme="dark"] .theme-toggle :global(.icon-moon) {
+        display: none;
+    }
+
+    html[data-theme="dark"] .nav-link:hover,
+    html[data-theme="dark"] .nav-link.is-active {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .nav-toggle span {
+        display: block;
+        height: 2px;
+        width: 100%;
+        background: var(--text);
+        border-radius: 2px;
+    }
+
+    @media (max-width: 768px) {
+        .nav {
+            display: none;
+        }
+
+        .nav-toggle {
+            display: flex;
+        }
+
+        .site-header.open .nav {
+            display: block;
+            position: absolute;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            background: var(--header-bg, #ffffff);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.25rem 1.25rem;
+        }
+
+        .site-header.open .nav ul {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .site-header.open .nav-link {
+            display: block;
+            padding: 0.75rem 0.9rem;
+        }
+    }
+</style>
+
+<script>
+    // Listen on document (event delegation) instead of the toggle node itself:
+    // with ClientRouter view transitions, navigation swaps in a fresh <header>
+    // without re-running this bundled script, which would leave the new
+    // toggle without a listener.
+    document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+
+        const themeToggle = target.closest('[data-theme-toggle]');
+        if (themeToggle) {
+            const root = document.documentElement;
+            const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', next);
+            try {
+                localStorage.setItem('jetexir-theme', next);
+            } catch (e) {
+                // Storage unavailable — the change still applies for this visit.
+            }
+            return;
+        }
+
+        const toggle = target.closest('[data-menu-toggle]');
+        if (toggle) {
+            toggle.closest('.site-header')?.classList.toggle('open');
+            return;
+        }
+
+        // Close the mobile menu after clicking a nav link (handles same-page
+        // hash links like /#features, where the header is not re-rendered).
+        const link = target.closest('.site-header.open .nav a');
+        if (link) {
+            link.closest('.site-header')?.classList.remove('open');
+        }
+    });
+</script>

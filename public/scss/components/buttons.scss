@@ -1,0 +1,77 @@
+@use "../base/variables";
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  justify-content: center;
+  padding: .8rem 1.5rem;
+  border-radius: 10px;
+  font-size: .95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease, color .2s ease;
+  text-decoration: none;
+
+  svg {
+    flex: 0 0 auto;
+  }
+
+  &:hover, &:focus {
+    transform: translateY(-2px);
+  }
+}
+
+.btn-primary {
+  background: variables.$primary;
+  color: #fff;
+  box-shadow: 0 8px 24px -10px rgba(124, 58, 237, .45);
+
+  &:hover, &:focus {
+    color: #fff;
+    background: #6d28d9;
+    box-shadow: 0 12px 30px -10px rgba(124, 58, 237, .6);
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: variables.$border__color;
+  color: variables.$text__color;
+
+  &:hover, &:focus {
+    border-color: variables.$primary;
+    color: variables.$text__color;
+    background: rgba(124, 58, 237, .06);
+  }
+}
+
+.btn-light {
+  background: #fff;
+  color: variables.$primary;
+
+  &:hover, &:focus {
+    color: variables.$secondary;
+  }
+}
+
+// For use on gradient / colored backgrounds (e.g. the CTA banner)
+.btn-outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, .5);
+  color: #fff;
+
+  &:hover, &:focus {
+    background: #fff;
+    border-color: #fff;
+    color: variables.$primary;
+  }
+}
+
+.btn-sm {
+  padding: .5rem 1rem;
+  font-size: .88rem;
+  border-radius: 8px;
+}

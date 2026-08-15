@@ -1,0 +1,39 @@
+@use "variables";
+
+form {
+  max-width: 600px;
+
+  & > * {
+    margin-block-start: 1.2rem;
+    margin-block-end: 0;
+  }
+
+  & :first-child {
+    margin-block-start: 0;
+  }
+
+  input, textarea, select {
+    border: 1px solid variables.$border__color;
+    border-radius: 5px;
+    corner-shape: squircle;
+    padding: 5px 10px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="search"],
+  textarea {
+    width: 100%;
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+
+  select {
+    background-color: variables.$bg__color;
+  }
+}

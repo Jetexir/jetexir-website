@@ -1,0 +1,50 @@
+@use "variables" as *;
+
+:root {
+  --background: #{$bg__color};
+  --footer-bg: #{$footer__bg};
+  --card-bg: #{$card_bg};
+  --border: #{$border__color};
+  --text: #{$text__color};
+  --text-muted: #{$text__muted};
+  --text-dim: #{$text__dim};
+  --text-white: #{$text__white};
+  --footer-link: #{$footer__link};
+  --footer-link-hover: #{$footer__link_hover};
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+  --pink: #{$pink};
+  --success: #{$success};
+  --gradient: #{$gradient};
+  --icon-bg: #{rgba($primary, 0.1)};
+  --header-bg: #{$header__bg};
+  --header-height: #{$header__height};
+  --radius: #{$radius};
+}
+
+::selection {
+  background-color: #{$primary};
+  color: #fff;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.container-expand {
+  max-width: 1920px;
+}
+
+.disable-select {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

@@ -1,0 +1,9 @@
+### Astro template
+# Gitignore template for Astro projects
+# Ignore content collection generated files
+.astro
+node_modules
+.idea
+dist
+.freebuff
+scratch

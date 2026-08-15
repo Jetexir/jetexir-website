@@ -1,0 +1,36 @@
+@use "variables";
+
+body {
+  font-family: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 18px;
+  font-style: normal;
+  line-height: 1.75;
+  background-color: variables.$bg__color;
+  color: variables.$text__color;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: variables.$link__color;
+  text-decoration: none;
+  transition: color .2s ease;
+
+  &:hover, &:focus, &:active {
+    color: variables.$link__hover_color;
+  }
+}
+
+strong {
+  font-weight: bold;
+}
+
+main {
+  flex: 1 0 auto;
+}

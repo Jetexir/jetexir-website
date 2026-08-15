@@ -1,0 +1,320 @@
+---
+import {getCollection, render} from "astro:content";
+import type {CollectionEntry} from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import {Icon} from "astro-icon/components";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog", ({data}) => !data.draft);
+    return posts.map((post) => ({
+        params: {slug: post.id},
+        props: {post},
+    }));
+}
+
+const {post} = Astro.props;
+const {Content} = await render(post);
+
+// Short description for each addon category, rendered under its heading.
+const categoryDescriptions: Record<string, string> = {
+    'Product': 'Make your products glanceable, more persuasive, and easier to act on with addons that boost engagement right where buying decisions happen.',
+    'Cart': 'Keep the basket always in reach so nothing interrupts the shopping flow.',
+    'Checkout': 'Shape the checkout to match the way your business actually takes orders.',
+    'Order': 'Bring order to order management with statuses and numbering that fit your workflow.',
+    'Customizations': 'Promote sales and polish the details that make a store feel professional.',
+};
+
+// Resolve the addons listed in the post frontmatter, keeping their order,
+// and group them by category so the sections mirror the /addons page.
+const listedAddons: CollectionEntry<'addons'>[] = [];
+for (const id of post.data.addons ?? []) {
+    const [match] = await getCollection("addons", (addon) => addon.id === id);
+    if (match) listedAddons.push(match);
+}
+
+const categoryOrder: string[] = [];
+listedAddons.forEach((addon) => {
+    if (!categoryOrder.includes(addon.data.category)) {
+        categoryOrder.push(addon.data.category);
+    }
+});
+
+const formattedDate = post.data.date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}
+            image={`/images/og/${post.id}.png`} current="blog">
+    <article>
+        <section class="post-hero">
+            <div class="container">
+                <a href="/blog" class="back-link" data-astro-prefetch>← All posts</a>
+
+                <span class="post-date">{formattedDate}</span>
+                <h1 class="post-title">{post.data.title}</h1>
+                <p class="post-lead">{post.data.description}</p>
+                {
+                    post.data.tags && post.data.tags.length > 0 && (
+                                <div class="post-tags">
+                                    {post.data.tags.map((tag) => (
+                                            <span class="post-tag">{tag}</span>
+                                    ))}
+                                </div>
+                    )
+                }
+                <img class="post-featured" src={`/images/featured/${post.id}.webp`}
+                     alt={`Featured image for ${post.data.title}`}
+                     width="1600" height="900" loading="lazy" decoding="async"/>
+            </div>
+        </section>
+
+        <section class="container post-content">
+            <div class="prose">
+                <Content/>
+            </div>
+
+            {
+                categoryOrder.length > 0 && (
+                            <div class="addon-sections">
+                                {categoryOrder.map((category) => {
+                                    const categoryAddons = listedAddons.filter((addon) => addon.data.category === category);
+                                    return (
+                                            <div class="addon-group">
+                                                <h2 class="category-title">{category} addons</h2>
+                                                {
+                                                    categoryDescriptions[category] && (
+                                                                <p class="category-desc">{categoryDescriptions[category]}</p>
+                                                    )
+                                                }
+                                                <div class="addon-grid">
+                                                    {categoryAddons.map((addon) => (
+                                                            <a href={`/addons/${addon.id}`} class="addon-card"
+                                                               data-astro-prefetch>
+                                                                <div class="addon-card-head">
+                                                                    <div class="addon-icon">
+                                                                        <Icon name={addon.data.icon} height="26" width="26"/>
+                                                                    </div>
+                                                                    <h3 class="addon-title">{addon.data.title}</h3>
+                                                                </div>
+                                                                <p class="addon-summary">{addon.data.summary}</p>
+                                                                {
+                                                                    addon.data.features && addon.data.features.length > 0 && (
+                                                                                <ul class="addon-features">
+                                                                                    {addon.data.features.slice(0, 3).map((feature) => (
+                                                                                            <li><span class="check">✓</span> {feature}
+                                                                                            </li>
+                                                                                    ))}
+                                                                                </ul>
+                                                                    )
+                                                                }
+                                                            </a>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                    );
+                                })}
+                            </div>
+                )
+            }
+
+            <div class="cta-wrap">
+                <CtaBand/>
+            </div>
+        </section>
+    </article>
+</BaseLayout>
+
+<style>
+    .post-hero {
+        padding: 4.5rem 0 2.5rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 3rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: var(--text);
+    }
+
+    .post-date {
+        display: inline-block;
+        color: var(--primary);
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+        margin-left: 0.5rem;
+    }
+
+    .post-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        letter-spacing: -0.03em;
+        margin: 0 0 0.9rem;
+        max-width: 48rem;
+    }
+
+    .post-lead {
+        color: var(--text-muted);
+        font-size: 1.08rem;
+        line-height: 1.7;
+        max-width: 46rem;
+        margin: 0 0 1.25rem;
+    }
+
+    .post-featured {
+        display: block;
+        width: 100%;
+        max-width: 960px;
+        margin: 2.5rem auto 0;
+        border-radius: 20px;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        border: 1px solid var(--border);
+    }
+
+    .post-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .post-tag {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        border: 1px solid rgba(124, 58, 237, 0.25);
+        background: rgba(124, 58, 237, 0.08);
+        color: var(--primary);
+        font-size: 0.78rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .post-content {
+        padding-bottom: 3rem;
+    }
+
+    .post-content .prose {
+        max-width: 46rem;
+    }
+
+    .addon-sections {
+        margin-top: 3rem;
+    }
+
+    .addon-group {
+        margin-bottom: 3rem;
+    }
+
+    .addon-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .category-title {
+        font-size: 1.5rem;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.5rem;
+    }
+
+    .category-desc {
+        color: var(--text-muted);
+        max-width: 42rem;
+        line-height: 1.7;
+        margin: 0 0 1.5rem;
+    }
+
+    .addon-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+
+    .addon-card {
+        position: relative;
+        display: block;
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+        transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .addon-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--primary);
+        box-shadow: 0 18px 40px -18px rgba(124, 58, 237, 0.22);
+    }
+
+    .addon-card-head {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .addon-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--icon-bg);
+        color: var(--primary);
+    }
+
+    .addon-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 0;
+        color: var(--text);
+    }
+
+    .addon-summary {
+        margin: 0 0 0.9rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+    .addon-features {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .addon-features li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.45rem;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        line-height: 1.55;
+        margin-bottom: 0.35rem;
+    }
+
+    .check {
+        color: var(--success);
+        font-weight: 700;
+        flex: 0 0 auto;
+    }
+
+    .cta-wrap {
+        margin-top: 3.5rem;
+    }
+
+    @media (max-width: 760px) {
+        .addon-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

@@ -1,0 +1,519 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CtaBand from "../components/CtaBand.astro";
+import HeroBackground from "../components/HeroBackground.astro";
+import {Icon} from "astro-icon/components";
+import {PLUGIN_WORDPRESS_URL} from "../consts";
+---
+
+<BaseLayout title="About Jetexir" description="Jetexir is a free, open source enhancement suite for WooCommerce." current="about">
+    <section class="page-hero">
+        <HeroBackground/>
+        <div class="container">
+            <h1 class="page-title">About Jetexir</h1>
+            <p class="page-subtitle">
+                An open source WooCommerce enhancement suite built to improve both the customer experience and the
+                tools available to store administrators.
+            </p>
+        </div>
+    </section>
+
+    <section class="container content">
+        <h2>What is Jetexir?</h2>
+        <p>
+            Jetexir is the enhancement suite for your WooCommerce store, designed to elevate both customer experience
+            and administrative efficiency. It brings together visual enhancements, customer engagement tools, flexible
+            product display options, streamlined shopping cart features, checkout optimization, andbranding tools, all in one plugin.
+        </p>
+
+        <h2>Why open source?</h2>
+        <p>
+            Jetexir is an open source project. That means the code is fully transparent, free to use, and improved by a
+            community of contributors. Whether you want to extend the plugin for your own store or help build features
+            that benefit every WooCommerce merchant, you are welcome to join.
+        </p>
+
+        <h2>Get involved</h2>
+        <p>
+            Find the source code and contribute on GitHub, or install Jetexir from the official WordPress plugin
+            repository.
+        </p>
+    </section>
+
+    <section class="section plugin-section" id="plugin-info">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-kicker">WordPress.org</span>
+                <h2 class="section-title">Jetexir in the plugin directory</h2>
+                <p class="section-desc">
+                    Live information fetched from the official WordPress plugin repository.
+                </p>
+            </div>
+
+            <div class="plugin-card" id="plugin-card" aria-live="polite">
+                <div class="plugin-loading" id="plugin-loading">
+                    <span class="spinner" aria-hidden="true"></span>
+                    Loading plugin information…
+                </div>
+                <div class="plugin-error" id="plugin-error" hidden>
+                    Could not reach the WordPress.org plugin API right now.
+                    <a href={PLUGIN_WORDPRESS_URL} target="_blank" rel="noopener">
+                        View Jetexir on WordPress.org <Icon name="arrow-right" height="16" width="16"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</BaseLayout>
+
+<style>
+    .page-hero {
+        position: relative;
+        overflow: clip;
+        padding: 5rem 0 3rem;
+        text-align: center;
+    }
+
+    .page-hero .container {
+        position: relative;
+    }
+
+    .page-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: -0.03em;
+        margin: 0 0 1rem;
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        max-width: 42rem;
+        margin: 0 auto;
+        font-size: 1.1rem;
+        line-height: 1.7;
+    }
+
+    .content {
+        max-width: 46rem;
+        padding-bottom: 4rem;
+    }
+
+    .content h2 {
+        font-size: 1.4rem;
+        margin: 2rem 0 0.8rem;
+        letter-spacing: -0.01em;
+    }
+
+    .content p {
+        color: var(--text-muted);
+        line-height: 1.75;
+        margin-bottom: 1rem;
+    }
+
+    /* Plugin info section */
+    .plugin-section {
+        padding: 2rem 0 5rem;
+    }
+
+    .section-head {
+        text-align: center;
+        max-width: 44rem;
+        margin: 0 auto 2.5rem;
+    }
+
+    .section-kicker {
+        display: inline-block;
+        color: var(--primary);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+        letter-spacing: -0.03em;
+        margin: 0 0 0.9rem;
+    }
+
+    .section-desc {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .plugin-card {
+        position: relative;
+        max-width: 54rem;
+        margin: 0 auto;
+        padding: 2.25rem;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+    }
+
+    .plugin-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 2.5rem 1rem;
+        color: var(--text-muted);
+    }
+
+    .spinner {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2.5px solid var(--icon-bg);
+        border-top-color: var(--primary);
+        animation: plugin-spin 0.8s linear infinite;
+    }
+
+    @keyframes plugin-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .plugin-error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 2.5rem 1rem;
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    .plugin-error a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .plugin-error[hidden] {
+        display: none;
+    }
+
+    /* Content injected by the client-side script gets no scope attribute,
+       so these rules are global on purpose. */
+    .plugin-card :global(.plugin-header) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .plugin-card :global(.plugin-name) {
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+
+    .plugin-card :global(.version-badge) {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.7rem;
+        border-radius: 999px;
+        background: var(--icon-bg);
+        color: var(--primary);
+        font-size: 0.85rem;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .plugin-card :global(.plugin-author) {
+        margin: 0 0 1.1rem;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    .plugin-card :global(.plugin-author a) {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .plugin-card :global(.plugin-desc) {
+        margin: 0 0 1.75rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+    }
+
+    .plugin-card :global(.plugin-stats) {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
+        border-radius: 12px;
+        background: var(--icon-bg);
+        margin-bottom: 1.75rem;
+    }
+
+    .plugin-card :global(.stat-label) {
+        display: block;
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.3rem;
+    }
+
+    .plugin-card :global(.stat-value) {
+        color: var(--text);
+        font-size: 1.15rem;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .plugin-card :global(.stat-value .stars) {
+        color: var(--primary);
+        letter-spacing: 0.05em;
+    }
+
+    .plugin-card :global(.stat-value .rating-count) {
+        color: var(--text-dim);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .plugin-card :global(.plugin-meta) {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem 1.5rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .plugin-card :global(.meta-label) {
+        display: block;
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.2rem;
+    }
+
+    .plugin-card :global(.meta-value) {
+        color: var(--text);
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .plugin-card :global(.plugin-tags) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .plugin-card :global(.plugin-tag) {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        border: 1px solid rgba(124, 58, 237, 0.25);
+        background: rgba(124, 58, 237, 0.08);
+        color: var(--primary);
+        font-size: 0.78rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .plugin-card :global(.plugin-actions) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .about-cta {
+        padding: 1rem 0 5rem;
+    }
+
+    @media (max-width: 760px) {
+        .plugin-card {
+            padding: 1.5rem;
+        }
+
+        .plugin-card :global(.plugin-stats),
+        .plugin-card :global(.plugin-meta) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .plugin-card :global(.plugin-stats),
+        .plugin-card :global(.plugin-meta) {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    interface PluginInfo {
+        name: string;
+        slug: string;
+        version: string;
+        author: string;
+        author_profile?: string;
+        requires?: string;
+        tested?: string;
+        requires_php?: string;
+        rating?: number;
+        num_ratings?: number;
+        downloaded?: number;
+        active_installs?: number;
+        last_updated?: string;
+        added?: string;
+        homepage?: string;
+        download_link?: string;
+        sections?: {description?: string};
+        tags?: Record<string, string>;
+    }
+
+    const API_URL = "https://api.wordpress.org/plugins/info/1.0/jetexir.json";
+
+    function escapeHtml(value: string): string {
+        return value.replace(/[&<>"']/g, (ch) => (
+            {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[ch] ?? ch
+        ));
+    }
+
+    function stripHtml(html: string): string {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        return (div.textContent ?? "").replace(/\s+/g, " ").trim();
+    }
+
+    function formatNumber(n: number): string {
+        return n.toLocaleString("en-US");
+    }
+
+    function ratingStars(rating: number): string {
+        const filled = Math.round(rating / 20);
+        return '★'.repeat(filled) + '☆'.repeat(Math.max(0, 5 - filled));
+    }
+
+    function shortDescription(html: string): string {
+        let text = stripHtml(html);
+        // Drop the listing's feature/legal sections — keep the intro excerpt only.
+        const marker = text.indexOf("Key Features:");
+        if (marker > 0) {
+            text = text.slice(0, marker);
+        }
+        const maxLength = 260;
+        if (text.length > maxLength) {
+            return text.slice(0, maxLength).trimEnd() + "…";
+        }
+        return text;
+    }
+
+    function statBlock(label: string, value: string): string {
+        return `<div class="stat"><span class="stat-label">${escapeHtml(label)}</span><span class="stat-value">${value}</span></div>`;
+    }
+
+    function metaItem(label: string, value: string): string {
+        return `<div class="meta-item"><span class="meta-label">${escapeHtml(label)}</span><span class="meta-value">${escapeHtml(value)}</span></div>`;
+    }
+
+    function renderCard(info: PluginInfo, card: HTMLElement): void {
+        const authorText = info.author ? stripHtml(info.author) : info.slug;
+        const authorLink = info.author_profile
+                ? `<a href="${escapeHtml(info.author_profile)}" target="_blank" rel="noopener">${escapeHtml(authorText)}</a>`
+                : escapeHtml(authorText);
+
+        const description = info.sections?.description
+                ? shortDescription(info.sections.description)
+                : "Jetexir is the enhancement suite for your WooCommerce store, designed to elevate both customer experience and administrative efficiency.";
+
+        const stats = [];
+        stats.push(statBlock("Downloads", formatNumber(info.downloaded ?? 0)));
+        stats.push(
+                info.active_installs != null
+                        ? statBlock("Active installs", `${formatNumber(info.active_installs)}+`)
+                        : statBlock("Version", `v${escapeHtml(info.version)}`)
+        );
+
+        const numRatings = info.num_ratings ?? 0;
+        const rating = info.rating ?? 0;
+        stats.push(
+                numRatings > 0
+                        ? statBlock("Rating", `<span class="stars">${ratingStars(rating)}</span> <span class="rating-count">(${formatNumber(numRatings)})</span>`)
+                        : statBlock("Rating", "No ratings yet")
+        );
+        stats.push(statBlock("Last updated", escapeHtml(info.last_updated ?? "—")));
+
+        const meta = [];
+        if (info.requires) meta.push(metaItem("Requires WP", info.requires));
+        if (info.tested) meta.push(metaItem("Tested up to", info.tested));
+        if (info.requires_php) meta.push(metaItem("Requires PHP", info.requires_php));
+        if (info.added) meta.push(metaItem("Added", info.added));
+
+        const tags = info.tags ? Object.values(info.tags) : [];
+        const tagsHtml = tags.length
+                ? `<div class="plugin-tags">${tags.map((tag) => `<span class="plugin-tag">${escapeHtml(tag)}</span>`).join("")}</div>`
+                : "";
+
+        const wordpressUrl = "https://wordpress.org/plugins/jetexir/";
+        const downloadUrl = info.download_link || `${wordpressUrl}download/`;
+
+        card.innerHTML = `
+            <div class="plugin-header">
+                <h3 class="plugin-name">${escapeHtml(info.name)}</h3>
+                <span class="version-badge">v${escapeHtml(info.version)}</span>
+            </div>
+            <p class="plugin-author">by ${authorLink}</p>
+            <p class="plugin-desc">${escapeHtml(description)}</p>
+            <div class="plugin-stats">${stats.join("")}</div>
+            <div class="plugin-meta">${meta.join("")}</div>
+            ${tagsHtml}
+            <div class="plugin-actions">
+                <a class="btn btn-primary" href="${escapeHtml(wordpressUrl)}" target="_blank" rel="noopener">View on WordPress.org</a>
+                <a class="btn btn-ghost" href="${escapeHtml(downloadUrl)}" target="_blank" rel="noopener">Download .zip</a>
+            </div>
+        `;
+    }
+
+    async function loadPluginInfo(): Promise<void> {
+        // Re-query the DOM on every run: the ClientRouter swaps in a fresh
+        // body on each navigation, so elements captured at module scope
+        // would reference a detached tree.
+        const card = document.getElementById("plugin-card");
+        if (!card) {
+            return;
+        }
+        const loading = document.getElementById("plugin-loading");
+        const errorBox = document.getElementById("plugin-error");
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            const info: unknown = await response.json();
+            if (!info || typeof info !== "object" || !("name" in info)) {
+                throw new Error("Unexpected API response");
+            }
+            loading?.remove();
+            renderCard(info as PluginInfo, card);
+        } catch (error) {
+            console.error("Failed to load WordPress.org plugin info:", error);
+            loading?.remove();
+            errorBox?.removeAttribute("hidden");
+        }
+    }
+
+    // The ClientRouter does not re-execute page scripts on repeated
+    // client-side navigation, so load the plugin info on astro:page-load:
+    // it fires on the initial load and after every view-transition swap,
+    // when the fresh About page markup (with its loading state) is in place.
+    document.addEventListener("astro:page-load", () => {
+        if (document.getElementById("plugin-card")) {
+            loadPluginInfo();
+        }
+    });
+</script>

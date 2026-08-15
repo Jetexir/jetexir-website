@@ -1,0 +1,37 @@
+{
+  "name": "jetexir-astro",
+  "version": "1.0.0",
+  "description": "jetexir-astro",
+  "main": "index.js",
+  "scripts": {
+    "jetexir-astro-watch-sass-compressed": "sass --watch public/scss/style.scss:public/css/style.min.css --style compressed",
+    "og:images": "node scripts/generate-og.mjs",
+    "featured:images": "node scripts/generate-featured.mjs",
+    "featured:regenerate-images": "node scripts/generate-featured.mjs --force",
+    "featured:blog-images": "node scripts/generate-featured.mjs --blog",
+    "featured:addons-images": "node scripts/generate-featured.mjs --addon",
+    "content:json": "node scripts/generate-content-json.mjs",
+    "icons": "node scripts/generate-icons.mjs",
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "node scripts/generate-og.mjs && astro build",
+    "check": "astro check",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "private": true,
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/three": "^0.185.4",
+    "sass": "^1.102.0",
+    "sharp": "^0.35.3",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.0",
+    "astro-compressor": "^1.3.0",
+    "astro-icon": "^1.1.5",
+    "three": "^0.185.1"
+  }
+}

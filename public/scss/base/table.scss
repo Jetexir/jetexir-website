@@ -1,0 +1,32 @@
+@use "variables";
+
+@use 'sass:color';
+
+table {
+  width: 100%;
+
+  th, td {
+    border: 1px solid variables.$border__color;
+    padding: 8px;
+  }
+
+  th {
+    font-weight: bold;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: variables.$bg__footer;
+    color: variables.$soft_white__color;
+    border-color: color.scale(variables.$bg__footer, $lightness: 10%);
+  }
+
+  tr {
+    &:nth-child(even) {
+      background-color: variables.$bg__color;
+    }
+
+    &:hover {
+      background-color: color.scale(variables.$bg__color, $lightness: -10%);
+    }
+  }
+}

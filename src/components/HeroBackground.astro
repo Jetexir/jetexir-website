@@ -1,0 +1,254 @@
+---
+import {Icon} from "astro-icon/components";
+
+// Decorative WooCommerce-style hero background: a soft gradient base with
+// morphing blob shapes and floating WordPress icon accents.
+// Place this at the top of a hero section that has `position: relative; overflow: clip;`.
+// The hero's content wrapper should be `position: relative` so it paints above this layer.
+
+// Scatter the icons at random positions (percentages of the hero area) on
+// every render, keeping them out of the central text column.
+const iconSpots = Array.from({length: 7}, () => {
+    const left = Math.random() < 0.5
+        ? 2 + Math.random() * 32
+        : 58 + Math.random() * 38;
+    const top = 5 + Math.random() * 57;
+    return {top, left};
+});
+---
+
+<div class="hero-bg" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+    <span class="blob blob-4"></span>
+    <span class="blob blob-5"></span>
+
+    {iconSpots.map((spot, i) => (
+            <span class={`decor wp-${i + 1}`} style={`top: ${spot.top}%; left: ${spot.left}%;`}>
+                <Icon name="wordpress"/>
+            </span>
+    ))}
+</div>
+
+<style>
+    .hero-bg {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        background: var(--hero-bg, linear-gradient(180deg, #f6f3ff 0%, #ffffff 60%, #ffffff 100%));
+    }
+
+    /* ---- Blobs ---- */
+    .blob {
+        position: absolute;
+        border-radius: 42% 58% 74% 26% / 44% 30% 70% 56%;
+        filter: blur(50px);
+        will-change: transform, border-radius;
+        animation: blob-morph 18s ease-in-out infinite alternate;
+    }
+
+    .blob-1 {
+        width: 460px;
+        height: 460px;
+        top: -160px;
+        left: -110px;
+        background: radial-gradient(circle at 35% 35%, #e9d5ff 0%, #c4b5fd 55%, #8b5cf6 100%);
+        opacity: 0.3;
+    }
+
+    .blob-2 {
+        width: 430px;
+        height: 430px;
+        top: -120px;
+        right: -120px;
+        background: radial-gradient(circle at 60% 35%, #ddd6fe 0%, #a78bfa 55%, #7c3aed 100%);
+        opacity: 0.25;
+        animation-delay: -6s;
+        animation-direction: alternate-reverse;
+    }
+
+    .blob-3 {
+        width: 360px;
+        height: 360px;
+        top: 32%;
+        left: 52%;
+        background: radial-gradient(circle at 50% 45%, #f5d0fe 0%, #e879f9 55%, #d946ef 100%);
+        opacity: 0.2;
+        animation-delay: -12s;
+    }
+
+    .blob-4 {
+        width: 300px;
+        height: 300px;
+        bottom: -40px;
+        left: 10%;
+        background: radial-gradient(circle at 50% 50%, #f3e8ff 0%, #d8b4fe 55%, #c084fc 100%);
+        opacity: 0.15;
+        animation-delay: -3s;
+        animation-direction: alternate-reverse;
+    }
+
+    .blob-5 {
+        width: 260px;
+        height: 260px;
+        bottom: -30px;
+        right: 6%;
+        background: radial-gradient(circle at 50% 50%, #e9d5ff 0%, #a855f7 55%, #9333ea 100%);
+        opacity: 0.1;
+        animation-delay: -9s;
+    }
+
+    @keyframes blob-morph {
+        0% {
+            border-radius: 42% 58% 74% 26% / 44% 30% 70% 56%;
+            transform: translate3d(0, 0, 0) rotate(0deg);
+        }
+        50% {
+            border-radius: 64% 36% 30% 70% / 50% 60% 40% 50%;
+            transform: translate3d(20px, -16px, 0) rotate(5deg);
+        }
+        100% {
+            border-radius: 30% 70% 62% 38% / 58% 34% 66% 42%;
+            transform: translate3d(-18px, 12px, 0) rotate(-4deg);
+        }
+    }
+
+    /* ---- Floating WordPress icon decorations ---- */
+    .decor {
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        pointer-events: none;
+        color: var(--primary);
+        animation: icon-drift 9s ease-in-out infinite, icon-glow 5s ease-in-out infinite;
+    }
+
+    .decor svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .wp-1 {
+        width: 24px;
+        height: 24px;
+        color: #6366f1;
+        animation-delay: -0.5s, -1s;
+    }
+
+    .wp-2 {
+        width: 16px;
+        height: 16px;
+        color: #7c3aed;
+        animation-delay: -2s, -3s;
+    }
+
+    .wp-3 {
+        width: 18px;
+        height: 18px;
+        color: #d946ef;
+        animation-delay: -3s, -2s;
+    }
+
+    .wp-4 {
+        width: 20px;
+        height: 20px;
+        color: #f59e0b;
+        animation-delay: -1s, -2.5s;
+    }
+
+    .wp-5 {
+        width: 16px;
+        height: 16px;
+        color: #7c3aed;
+        animation-delay: -2.5s, -4s;
+    }
+
+    .wp-6 {
+        width: 16px;
+        height: 16px;
+        color: #22c55e;
+        animation-delay: -4s, -1.5s;
+    }
+
+    .wp-7 {
+        width: 12px;
+        height: 12px;
+        color: #d946ef;
+        animation-delay: -1.5s, -3.5s;
+    }
+
+    @keyframes icon-drift {
+        0%, 100% {
+            transform: translate3d(0, 0, 0) rotate(0deg);
+        }
+        25% {
+            transform: translate3d(9px, -13px, 0) rotate(7deg);
+        }
+        50% {
+            transform: translate3d(0, -22px, 0) rotate(0deg);
+        }
+        75% {
+            transform: translate3d(-9px, -11px, 0) rotate(-7deg);
+        }
+    }
+
+    @keyframes icon-glow {
+        0%, 100% {
+            opacity: 0.3;
+        }
+        50% {
+            opacity: 0.55;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .blob,
+        .decor {
+            animation: none;
+        }
+    }
+
+    @media (max-width: 680px) {
+        .blob-1 {
+            width: 320px;
+            height: 320px;
+            top: -120px;
+            left: -90px;
+        }
+
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -90px;
+        }
+
+        .blob-3 {
+            width: 240px;
+            height: 240px;
+            top: 30%;
+            left: 50%;
+        }
+
+        .blob-4 {
+            width: 200px;
+            height: 200px;
+            bottom: -30px;
+        }
+
+        .blob-5 {
+            width: 180px;
+            height: 180px;
+            bottom: -20px;
+        }
+
+        .wp-2,
+        .wp-6,
+        .wp-7 {
+            display: none;
+        }
+    }
+</style>

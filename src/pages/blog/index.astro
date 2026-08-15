@@ -1,0 +1,86 @@
+---
+import {getCollection} from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HeroBackground from "../../components/HeroBackground.astro";
+import BlogCard from "../../components/BlogCard.astro";
+
+const posts = (await getCollection("blog", ({data}) => !data.draft))
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const title = 'Jetexir Blog';
+const description = 'News, releases, and guides from the Jetexir team.';
+---
+
+<BaseLayout title={title} description={description} current="blog">
+    <section class="page-hero">
+        <HeroBackground/>
+        <div class="container">
+            <h1 class="page-title">Jetexir Blog</h1>
+            <p class="page-subtitle">
+                News, releases, and guides from the Jetexir team.
+            </p>
+        </div>
+    </section>
+
+    <section class="container blog-content">
+        {
+            posts.length === 0 ? (
+                    <p class="empty">No posts yet, check back soon.</p>
+            ) : (
+                    <div class="post-grid">
+                        {posts.map((post) => (
+                                <BlogCard post={post} headingLevel="h2"/>
+                        ))}
+                    </div>
+            )
+        }
+    </section>
+</BaseLayout>
+
+<style>
+    .page-hero {
+        position: relative;
+        overflow: clip;
+        padding: 5rem 0 3rem;
+        text-align: center;
+    }
+
+    .page-hero .container {
+        position: relative;
+    }
+
+    .page-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: -0.03em;
+        margin: 0 0 1rem;
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        max-width: 42rem;
+        margin: 0 auto;
+        font-size: 1.1rem;
+    }
+
+    .blog-content {
+        padding-bottom: 4rem;
+        margin-top: 2rem;
+    }
+
+    .empty {
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    .post-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 860px) {
+        .post-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

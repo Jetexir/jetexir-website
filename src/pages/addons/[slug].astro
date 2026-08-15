@@ -1,0 +1,229 @@
+---
+import {getCollection, render} from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import AddonCard from "../../components/AddonCard.astro";
+import {Icon} from "astro-icon/components";
+
+export async function getStaticPaths() {
+    const addons = await getCollection("addons");
+    return addons.map((addon) => ({
+        params: {slug: addon.id},
+        props: {addon},
+    }));
+}
+
+const {addon} = Astro.props;
+const {Content} = await render(addon);
+
+const allAddons = (await getCollection("addons")).sort((a, b) => a.data.order - b.data.order);
+const relatedAddons = allAddons.filter((candidate) =>
+    candidate.data.category === addon.data.category && candidate.id !== addon.id);
+---
+
+<BaseLayout title={addon.data.title} description={addon.data.summary}
+              image={`/images/og/${addon.id}.png`} current="addon">
+    <article>
+        <section class="addon-hero">
+            <div class="container">
+                <a href="/addons" class="back-link" data-astro-prefetch>← All addons</a>
+                <div class="addon-hero-head">
+                    <div class="addon-icon">
+                        <Icon name={addon.data.icon} height="34" width="34"/>
+                    </div>
+                    <div>
+                        <span class="addon-category">{addon.data.category}</span>
+                        <h1 class="addon-title">{addon.data.title}</h1>
+                        <p class="addon-lead">{addon.data.summary}</p>
+                    </div>
+                </div>
+                <img class="addon-featured" src={`/images/featured/${addon.id}.webp`}
+                     alt={`Illustration for the ${addon.data.title} addon`}
+                     width="1600" height="900" loading="lazy" decoding="async"/>
+            </div>
+        </section>
+
+        <section class="container addon-content">
+            <div class="prose">
+                <Content/>
+            </div>
+
+            {
+                addon.data.features && addon.data.features.length > 0 && (
+                        <div class="feature-list card">
+                            <h2 class="feature-list-title">Key capabilities</h2>
+                            <ul>
+                                {addon.data.features.map((feature) => (
+                                        <li><span class="check">✓</span> {feature}</li>
+                                ))}
+                            </ul>
+                        </div>
+                )
+            }
+
+            {
+                relatedAddons.length > 0 && (
+                        <section class="related-addons">
+                            <h2 class="related-title">Related addons</h2>
+                            <div class="related-grid">
+                                {relatedAddons.map((related) => (
+                                        <AddonCard addon={related}/>
+                                ))}
+                            </div>
+                        </section>
+                )
+            }
+
+            <div class="cta-wrap">
+                <CtaBand/>
+            </div>
+        </section>
+    </article>
+</BaseLayout>
+
+<style>
+    .addon-hero {
+        padding: 4.5rem 0 2.5rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 3rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        color: var(--text-muted);
+        margin-bottom: 1.75rem;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: var(--text);
+    }
+
+    .addon-hero-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.4rem;
+    }
+
+    .addon-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: var(--icon-bg);
+        color: var(--primary);
+    }
+
+    .addon-category {
+        color: var(--primary);
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .addon-title {
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        letter-spacing: -0.03em;
+        margin: 0.15rem 0 0.6rem;
+    }
+
+    .addon-lead {
+        color: var(--text-muted);
+        font-size: 1.08rem;
+        max-width: 46rem;
+        margin: 0;
+        line-height: 1.7;
+    }
+
+    .addon-featured {
+        display: block;
+        width: 100%;
+        max-width: 960px;
+        margin: 2.5rem auto 0;
+        border-radius: 20px;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        border: 1px solid var(--border);
+    }
+
+    .addon-content {
+        padding-bottom: 3rem;
+    }
+
+    .feature-list.card {
+        margin-top: 2.5rem;
+        padding: 1.8rem 2rem;
+    }
+
+    .feature-list-title {
+        font-size: 1.2rem;
+        margin: 0 0 1rem;
+    }
+
+    .feature-list ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 0.75rem 2rem;
+    }
+
+    .feature-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        color: var(--text);
+        font-size: 0.95rem;
+    }
+
+    .check {
+        color: var(--success);
+        font-weight: 700;
+    }
+
+    .cta-wrap {
+        margin-top: 3.5rem;
+    }
+
+    .related-addons {
+        margin-top: 3.5rem;
+    }
+
+    .related-title {
+        font-size: 1.5rem;
+        letter-spacing: -0.02em;
+        margin: 0 0 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 1000px) {
+        .related-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 640px) {
+        .related-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+
+    @media (max-width: 640px) {
+        .addon-hero-head {
+            flex-direction: column;
+        }
+    }
+</style>

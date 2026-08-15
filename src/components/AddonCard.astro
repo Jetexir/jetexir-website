@@ -1,0 +1,87 @@
+---
+import {Icon} from "astro-icon/components";
+
+const {addon} = Astro.props;
+const featured = `/images/featured/${addon.id}.webp`;
+---
+
+<a href={`/addons/${addon.id}`} class="addon-card" data-astro-prefetch>
+    <img class="featured" src={featured} alt="" width="1600" height="900" loading="lazy" decoding="async"/>
+    <div class="addon-body">
+        <span class="addon-category">{addon.data.category}</span>
+        <div class="addon-title-row">
+            <span class="addon-title-icon">
+                <Icon name={addon.data.icon} height="20" width="20"/>
+            </span>
+            <h3 class="addon-title">{addon.data.title}</h3>
+        </div>
+        <p class="addon-summary">{addon.data.summary}</p>
+    </div>
+</a>
+
+<style>
+    .addon-card {
+        position: relative;
+        display: block;
+        padding: 1.6rem 1.6rem 1.4rem;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+        transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .addon-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--primary);
+        box-shadow: 0 18px 40px -18px rgba(124, 58, 237, 0.22);
+    }
+
+    .featured {
+        display: block;
+        width: calc(100% + 3.2rem);
+        max-width: none;
+        margin: -1.6rem -1.6rem 1.2rem;
+        border-radius: 16px 16px 0 0;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+    }
+
+    .addon-title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin-bottom: 0.45rem;
+    }
+
+    .addon-title-icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        color: var(--primary);
+    }
+
+    .addon-category {
+        display: inline-block;
+        color: var(--primary);
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.4rem;
+    }
+
+    .addon-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.01em;
+        color: var(--text);
+    }
+
+    .addon-summary {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+</style>

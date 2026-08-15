@@ -1,0 +1,197 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+    title: string;
+    description: string;
+    image?: string;
+    current?: string;
+    robots?: string;
+}
+const {title, description, current, image, robots} = Astro.props;
+---
+<html lang="en">
+<head>
+    <script is:inline>
+        (function () {
+            const KEY = 'jetexir-theme';
+
+            function storedTheme() {
+                try {
+                    const value = localStorage.getItem(KEY);
+                    if (value === 'light' || value === 'dark') return value;
+                } catch (e) {
+                    // Storage unavailable (e.g. private mode) — fall through.
+                }
+                return null;
+            }
+
+            function syncThemeColor(theme) {
+                const meta = document.querySelector('meta[name="theme-color"]');
+                if (meta) {
+                    meta.setAttribute('content', theme === 'dark' ? '#12141d' : '#FFFFFF');
+                }
+            }
+
+            function currentTheme() {
+                // A manually chosen theme wins; otherwise follow the device.
+                return storedTheme() || (
+                    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                            ? 'dark'
+                            : 'light'
+                );
+            }
+
+            function applyTheme() {
+                const theme = currentTheme();
+                document.documentElement.setAttribute('data-theme', theme);
+                syncThemeColor(theme);
+                return theme;
+            }
+
+            // Run before first paint so there is no light-mode flash.
+            applyTheme();
+
+            // Set up one-time listeners (this inline script only runs on a
+            // full page load; the listeners survive ClientRouter navigation).
+            if (!window.__jetexirThemeInit) {
+                window.__jetexirThemeInit = true;
+
+                // The ClientRouter replaces the <html> attributes during the
+                // swap, which drops data-theme. Re-apply after every swap.
+                document.addEventListener('astro:page-load', function () {
+                    applyTheme();
+                });
+
+                // Follow OS theme changes unless the visitor picked a theme
+                // manually.
+                if (window.matchMedia) {
+                    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+                    const onChange = (e) => {
+                        if (!storedTheme()) {
+                            const theme = e.matches ? 'dark' : 'light';
+                            document.documentElement.setAttribute('data-theme', theme);
+                            syncThemeColor(theme);
+                        }
+                    };
+                    if (mq.addEventListener) {
+                        mq.addEventListener('change', onChange);
+                    } else if (mq.addListener) {
+                        mq.addListener(onChange);
+                    }
+                }
+            }
+        })();
+    </script>
+    <BaseHead title={title} description={description}
+              image={image} current={current} robots={robots}/>
+</head>
+<body class={'pages ' + current}>
+<Header current={current}/>
+
+<main>
+    <slot/>
+</main>
+
+<Footer/>
+</body>
+</html>
+
+<style is:global>
+    html {
+        color-scheme: light;
+    }
+
+    /* Dark theme tokens — override the light palette from helper.scss. */
+    html[data-theme="dark"] {
+        color-scheme: dark;
+        --background: #12141d;
+        --card-bg: #1a1d28;
+        --border: #2b2f40;
+        --text: #ececf1;
+        --text-muted: #a6aabb;
+        --text-dim: #6d7283;
+        --primary: #a78bfa;
+        --success: #4ade80;
+        --icon-bg: rgba(167, 139, 250, 0.16);
+        --header-bg: rgba(18, 20, 29, 0.85);
+        --footer-bg: #0f0d1a;
+        --section-alt-bg: #171a26;
+        --hero-bg: linear-gradient(180deg, #231b3a 0%, #171226 55%, #12141d 100%);
+        --gradient: linear-gradient(135deg, #a78bfa 0%, #e879f9 100%);
+    }
+
+    /* body and .btn-ghost carry hardcoded light colors in style.min.css. */
+    html[data-theme="dark"] body {
+        background-color: var(--background);
+        color: var(--text);
+    }
+
+    html[data-theme="dark"] .btn-ghost {
+        color: var(--text);
+        border-color: var(--border);
+    }
+
+    html[data-theme="dark"] .btn-ghost:hover,
+    html[data-theme="dark"] .btn-ghost:focus {
+        color: var(--text);
+    }
+
+    html[data-theme="dark"] .hero-badge {
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* .prose / .content carry hardcoded text colors in style.min.css that
+       become unreadable on the dark background. */
+    html[data-theme="dark"] .prose h1,
+    html[data-theme="dark"] .prose h2,
+    html[data-theme="dark"] .prose h3,
+    html[data-theme="dark"] .prose h4,
+    html[data-theme="dark"] .prose strong,
+    html[data-theme="dark"] .content h1,
+    html[data-theme="dark"] .content h2,
+    html[data-theme="dark"] .content h3,
+    html[data-theme="dark"] .content h4,
+    html[data-theme="dark"] .content strong {
+        color: var(--text);
+    }
+
+    html[data-theme="dark"] .prose p,
+    html[data-theme="dark"] .prose li,
+    html[data-theme="dark"] .content p,
+    html[data-theme="dark"] .content li {
+        color: var(--text-muted);
+    }
+
+    html[data-theme="dark"] .prose a:not(.btn),
+    html[data-theme="dark"] .content a:not(.btn) {
+        color: var(--primary);
+    }
+
+    html[data-theme="dark"] .prose blockquote,
+    html[data-theme="dark"] .content blockquote {
+        background: var(--card-bg);
+        border-left-color: var(--border);
+    }
+
+    html[data-theme="dark"] .prose blockquote p,
+    html[data-theme="dark"] .content blockquote p {
+        color: var(--text-muted);
+    }
+
+    html[data-theme="dark"] .prose blockquote cite,
+    html[data-theme="dark"] .content blockquote cite {
+        color: var(--text-dim);
+    }
+
+    html[data-theme="dark"] code {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    html[data-theme="dark"] figure figcaption {
+        background: var(--card-bg);
+        color: var(--text-muted);
+    }
+</style>

@@ -1,0 +1,594 @@
+---
+import {getCollection} from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AddonCard from "../components/AddonCard.astro";
+import BlogCard from "../components/BlogCard.astro";
+import CtaBand from "../components/CtaBand.astro";
+import HeroBackground from "../components/HeroBackground.astro";
+import HeroThree from "../components/HeroThree.astro";
+import {Icon} from "astro-icon/components";
+import {PLUGIN_WORDPRESS_URL, PLUGIN_GITHUB_URL} from "../consts";
+
+const addons = await getCollection("addons");
+// Randomize the featured grid: Fisher–Yates shuffle, then keep six.
+const featuredAddons = [...addons];
+for (let i = featuredAddons.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [featuredAddons[i], featuredAddons[j]] = [featuredAddons[j], featuredAddons[i]];
+}
+featuredAddons.length = 6;
+
+// Latest blog posts for the home page (newest first, capped at three).
+const latestPosts = (await getCollection("blog", ({data}) => !data.draft))
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+    .slice(0, 3);
+
+// Feature areas mirroring the addon collection: every card references the
+// actual addons it covers so the copy stays in sync with what Jetexir ships.
+const coreFeatures = [
+    {
+        icon: 'ui-design',
+        title: 'Visual Enhancements',
+        description: 'Sale badges styled to match your brand, flexible price variation formats, and a live sale progress bar that makes every discount impossible to miss.'
+    },
+    {
+        icon: 'wishlist',
+        title: 'Customer Engagement',
+        description: 'Wishlists, one-click social sharing, product FAQs, and smart related products keep shoppers interested and coming back.'
+    },
+    {
+        icon: 'call-for-price',
+        title: 'Flexible Product Display',
+        description: 'Side-by-side product comparison, call-for-price prompts for quote-based catalogs, and quantity fields that match how your inventory really works.'
+    },
+    {
+        icon: 'fly-cart',
+        title: 'Streamlined Shopping',
+        description: 'A slide-in Fly Cart and a live Menu Cart keep the basket always in reach, without ever interrupting the shopping flow.'
+    },
+    {
+        icon: 'checkout-fields',
+        title: 'Checkout & Orders',
+        description: 'A checkout form shaped to your business, custom order statuses, and clean sequential order numbers that fit your workflow.'
+    },
+    {
+        icon: 'announcement-bar',
+        title: 'Branding & Promotions',
+        description: 'Announcement bars for flash sales and news, plus currency symbols and price formatting tuned to your local market.'
+    },
+];
+
+const benefits = [
+    {
+        title: 'Boost Conversions',
+        text: 'Wishlists and product comparison help shoppers decide faster, while sale progress bars turn discounts into real urgency.'
+    },
+    {
+        title: 'Enhance Professionalism',
+        text: 'Brand-styled sale badges, a polished announcement bar, and clean sequential order numbers build trust at every touchpoint.'
+    },
+    {
+        title: 'Streamline Operations',
+        text: 'Custom order statuses, quantity controls, and checkout fields shaped to your business simplify day-to-day management.'
+    },
+    {
+        title: 'Improve Engagement',
+        text: 'Product FAQs, related products, and one-click social sharing keep shoppers browsing longer and spread the word for you.'
+    },
+    {
+        title: 'Flexible Customization',
+        text: 'All 17 addons are configurable without a single line of code. Style each one to match your brand.'
+    },
+    {
+        title: 'Free & Open Source',
+        text: 'Fully open source and free forever, backed by a community that keeps improving Jetexir.'
+    },
+];
+---
+
+<BaseLayout title="Jetexir for WooCommerce"
+            description="The enhancement suite for your WooCommerce store. Elevate customer experience and administrative efficiency with Jetexir."
+            current="home">
+    <!-- Hero -->
+    <section class="hero">
+        <HeroBackground/>
+        <HeroThree/>
+        <div class="container hero-inner">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                Free &amp; Open Source WooCommerce Plugin
+            </div>
+            <h1 class="hero-title">
+                Jetexir <span class="gradient-text">for WooCommerce</span>
+            </h1>
+            <p class="hero-lead">
+                The enhancement suite for your WooCommerce store, designed to elevate both customer experience and
+                administrative efficiency.
+            </p>
+            <div class="hero-actions">
+                <a href={PLUGIN_WORDPRESS_URL} target="_blank" rel="noopener" class="btn btn-primary">
+                    <Icon name="wordpress" height="20" width="20"/>
+                    Download on WordPress.org
+                </a>
+                <a href={PLUGIN_GITHUB_URL} target="_blank" rel="noopener" class="btn btn-ghost">
+                    <Icon name="github-2" height="20" width="20"/>
+                    View on GitHub
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat"><span class="stat-value" data-count="17" data-suffix="+">17+</span><span
+                        class="stat-label">Addons</span></div>
+                <div class="stat"><span class="stat-value" data-count="6">6</span><span
+                        class="stat-label">Feature areas</span></div>
+                <div class="stat"><span class="stat-value" data-count="100" data-suffix="%">100%</span><span
+                        class="stat-label">Open source</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-kicker">Core features</span>
+                <h2 class="section-title">Everything your store needs</h2>
+                <p class="section-desc">
+                    Jetexir transforms your WooCommerce store into a more engaging, user-friendly shopping destination
+                    while giving you powerful tools to manage every aspect of the customer journey.
+                </p>
+            </div>
+
+            <div class="feature-grid">
+                {coreFeatures.map((feature) => (
+                        <div class="feature-card" id={`feature-${feature.title.toLowerCase().replace(/\s+/g, '-')}`}>
+                            <div class="feature-icon">
+                                <Icon name={feature.icon} height="26" width="26"/>
+                            </div>
+                            <h3 class="feature-title">{feature.title}</h3>
+                            <p class="feature-desc">{feature.description}</p>
+                        </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <!-- Addons highlight -->
+    <section class="section section-alt" id="addons">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-kicker">Addons</span>
+                <h2 class="section-title">Powerful tools, beautifully integrated</h2>
+                <p class="section-desc">
+                    Every addon is designed to work seamlessly with WooCommerce and your existing setup, easy to
+                    configure, no coding required.
+                </p>
+            </div>
+
+            <div class="addon-grid">
+                {featuredAddons.map((addon) => (
+                        <AddonCard addon={addon}/>
+                ))}
+            </div>
+
+            <div class="center-cta">
+                <a href="/addons" class="btn btn-primary" data-astro-prefetch>
+                    Explore all addons
+                    <Icon name="arrow-right" height="20" width="20"/>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why choose -->
+    <section class="section" id="why">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-kicker">Why Jetexir</span>
+                <h2 class="section-title">Built to help your store grow</h2>
+            </div>
+
+            <div class="benefit-grid">
+                {benefits.map((benefit) => (
+                        <div class="benefit-card">
+                            <div class="benefit-head">
+                                <span class="benefit-check">✓</span>
+                                <h3 class="benefit-title">{benefit.title}</h3>
+                            </div>
+                            <p class="benefit-text">{benefit.text}</p>
+                        </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <!-- Download CTA -->
+    <section class="section section-cta">
+        <div class="container">
+            <CtaBand
+                    title="Ready to enhance your WooCommerce store?"
+                    description="Jetexir is free, open source, and continuously improved. Download it today from the WordPress repository, and join the community on GitHub to shape its future."
+                    primaryLabel="Download Now"
+                    secondaryLabel="Get the Source"
+            />
+        </div>
+    </section>
+
+    <!-- Blog -->
+    {
+        latestPosts.length > 0 && (
+                    <section class="section section-blog" id="blog">
+                        <div class="container">
+                            <div class="section-head">
+                                <span class="section-kicker">From the blog</span>
+                                <h2 class="section-title">Latest news and releases</h2>
+                                <p class="section-desc">
+                                    Product updates, guides, and behind-the-scenes notes from the Jetexir team.
+                                </p>
+                            </div>
+
+                            <div class="post-grid">
+                                {latestPosts.map((post) => (
+                                        <BlogCard post={post}/>
+                                ))}
+                            </div>
+
+                            <div class="center-cta">
+                                <a href="/blog" class="btn btn-ghost" data-astro-prefetch>
+                                    View all posts
+                                    <Icon name="arrow-right" height="20" width="20"/>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+        )
+    }
+</BaseLayout>
+
+<style>
+    /* Hero */
+    .hero {
+        position: relative;
+        padding: 6rem 0 4.5rem;
+        text-align: center;
+        overflow: clip;
+    }
+
+    .hero-inner {
+        position: relative;
+        max-width: 56rem;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.4rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(24, 24, 27, 0.03);
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 1.6rem;
+    }
+
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 8px rgba(22, 163, 74, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+        }
+    }
+
+    .hero-title {
+        font-size: clamp(2.6rem, 6vw, 4.2rem);
+        line-height: 1.02;
+        letter-spacing: -0.045em;
+        font-weight: 800;
+        margin: 0 0 1.25rem;
+        color: var(--text);
+    }
+
+    .gradient-text {
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+    }
+
+    .hero-lead {
+        color: var(--text-muted);
+        font-size: clamp(1.05rem, 2vw, 1.25rem);
+        line-height: 1.7;
+        max-width: 42rem;
+        margin: 0 auto 2rem;
+    }
+
+    .hero-actions {
+        display: flex;
+        justify-content: center;
+        gap: 0.9rem;
+        flex-wrap: wrap;
+    }
+
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-top: 3rem;
+    }
+
+    .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+    }
+
+    .stat-value {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: var(--text);
+    }
+
+    .stat-label {
+        color: var(--text-dim);
+        font-size: 0.85rem;
+    }
+
+    /* Sections */
+    .section {
+        padding: 5rem 0;
+    }
+
+    .section-alt {
+        background: var(--section-alt-bg, #f7f7fa);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .section-head {
+        text-align: center;
+        max-width: 44rem;
+        margin: 0 auto 3rem;
+    }
+
+    .section-kicker {
+        display: inline-block;
+        color: var(--primary);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+        letter-spacing: -0.03em;
+        margin: 0 0 0.9rem;
+    }
+
+    .section-desc {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    /* Feature cards */
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .feature-card {
+        padding: 1.8rem;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+        scroll-margin-top: 6rem;
+    }
+
+    .feature-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-3px);
+    }
+
+    .feature-icon {
+        display: grid;
+        place-items: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 13px;
+        background: var(--icon-bg);
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+
+    .feature-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem;
+        letter-spacing: -0.01em;
+    }
+
+    .feature-desc {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        line-height: 1.65;
+    }
+
+    /* Addons grid */
+    .addon-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .center-cta {
+        text-align: center;
+        margin-top: 2.5rem;
+    }
+
+    /* Benefits */
+    .benefit-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+    }
+
+    .benefit-card {
+        padding: 1.4rem 1.5rem;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+    }
+
+    .benefit-head {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .benefit-check {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(22, 163, 74, 0.12);
+        color: var(--success);
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    .benefit-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .benefit-text {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    /* CTA */
+    .section-cta {
+        padding: 2rem 0 5rem;
+    }
+
+    /* Blog */
+    .section-blog {
+        padding: 0 0 5rem;
+    }
+
+    .post-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+        .feature-grid,
+        .addon-grid,
+        .benefit-grid,
+        .post-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 680px) {
+        .hero {
+            padding: 4rem 0 3rem;
+        }
+
+        .hero-title {
+            font-size: clamp(1.75rem, 7vw, 2.5rem);
+            line-height: 1.08;
+        }
+
+        .hero-stats {
+            gap: 2rem;
+        }
+
+        .feature-grid,
+        .addon-grid,
+        .benefit-grid,
+        .post-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    // Count-up animation for the hero stats
+    const statValues: NodeListOf<HTMLElement> = document.querySelectorAll<HTMLElement>('.hero-stats .stat-value[data-count]');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function animateCount(el: HTMLElement) {
+        const target = Number(el.dataset.count);
+        const suffix = el.dataset.suffix || '';
+
+        if (reduceMotion) {
+            el.textContent = target + suffix;
+            return;
+        }
+
+        const duration = 1500;
+        const start = performance.now();
+        const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+
+        el.textContent = '0' + suffix;
+
+        function tick(now: number) {
+            const progress = Math.min((now - start) / duration, 1);
+            el.textContent = Math.round(easeOut(progress) * target) + suffix;
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            }
+        }
+
+        requestAnimationFrame(tick);
+    }
+
+    if (statValues.length && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    animateCount(entry.target as HTMLElement);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {threshold: 0.4});
+
+        statValues.forEach((el) => observer.observe(el));
+    } else {
+        statValues.forEach((el) => {
+            el.textContent = el.dataset.count + (el.dataset.suffix || '');
+        });
+    }
+</script>

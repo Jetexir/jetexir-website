@@ -1,0 +1,38 @@
+@use 'sass:color';
+
+// ---------------------------------------------------------------------------
+// Design tokens, light mode with WooCommerce purple as the primary color
+// ---------------------------------------------------------------------------
+$text__color: #18181b;
+$text__muted: #52525b;
+$text__dim: #9ca3af;
+$soft_text__color: #52525b;
+$soft_white__color: #18181b;
+$bg__color: #ffffff;
+$footer__bg: #1d1438; // dark footer background
+$card_bg: #ffffff;
+$border__color: #e5e7eb;
+$primary: #7c3aed;
+$secondary: #873EFF;
+$pink: #d946ef;
+$success: #16a34a;
+$gradient: linear-gradient(135deg, #7c3aed 0%, #873EFF 100%);
+
+$link__color: $text__color;
+$link__hover_color: $primary;
+
+$btn_primary_bg: $primary;
+$btn_primary_color: #fff;
+$btn_border_color: #e5e7eb;
+
+$bg__footer: #fafafa;
+
+// ---------------------------------------------------------------------------
+// UI / layout tokens (exposed as CSS custom properties in helper.scss)
+// ---------------------------------------------------------------------------
+$text__white: #fff;
+$footer__link: rgb(163, 154, 193);
+$footer__link_hover: rgb(139, 92, 246);
+$header__bg: rgba(255, 255, 255, 0.85);
+$header__height: 68px;
+$radius: 16px;
