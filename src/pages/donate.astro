@@ -1,0 +1,613 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroBackground from "../components/HeroBackground.astro";
+import CtaBand from "../components/CtaBand.astro";
+import {Icon} from "astro-icon/components";
+
+const cryptoAddresses = [
+    {
+        name: "Bitcoin (BTC)",
+        address: "bc1qrts24tj0gemzkvewapcguvqdclttyr8amdp5xx",
+        icon: "bitcoin"
+    },
+    {
+        name: "Ethereum (ETH)",
+        address: "0xCFdECBB34CF6226502c25f58378bd606133D6320",
+        icon: "ethereum"
+    },
+    {
+        name: "Solana (SOL)",
+        address: "DDYFM8Ch7WmRfAGSM1AujTNpzmEtKo6YNS3eRsDQoUvL",
+        icon: "solana"
+    },
+    {
+        name: "BNB Smart Chain (BSC)",
+        address: "0xCFdECBB34CF6226502c25f58378bd606133D6320",
+        icon: "bnb"
+    },
+    {
+        name: "Tron (TRX)",
+        address: "TFQvPRHK7pnxckRieLMwvDAkd1w42W12kB",
+        icon: "tron"
+    },
+    {
+        name: "Dogecoin (DOGE)",
+        address: "DAvJTqhq9a7uRmD1PTsueg8v9Nu5nZWC8Q",
+        icon: "dogecoin"
+    },
+    {
+        name: "XRP",
+        address: "raN8etN1j8cmebepXmonboXppnwBy4seAW",
+        icon: "xrp"
+    }
+];
+
+const advantages = [
+    {
+        icon: "free",
+        title: "Completely Free",
+        description: "Jetexir is 100% free with no hidden fees, premium tiers, or paywalls. Every feature is available to every store from day one."
+    },
+    {
+        icon: "open-source",
+        title: "Open Source Transparency",
+        description: "Full source code visibility means you can audit, modify, and trust the plugin running on your store."
+    },
+    {
+        icon: "wordpress",
+        title: "WordPress.org Verified",
+        description: "Listed and reviewed on the official WordPress.org plugin repository, meeting strict quality and security standards."
+    },
+    {
+        icon: "lightweight",
+        title: "Lightweight & Fast",
+        description: "Carefully optimized to add powerful features without bloating your store or slowing down page loads."
+    },
+    {
+        icon: "no-code",
+        title: "No-Code Configuration",
+        description: "Every addon is fully configurable through the WordPress admin panel — no PHP, CSS, or JavaScript required."
+    },
+    {
+        icon: "modular",
+        title: "Modular Design",
+        description: "Enable only the addons you need. Each one works independently, keeping your store lean and focused."
+    }
+];
+
+const woocommerceBenefits = [
+    {
+        title: "Higher Conversion Rates",
+        description: "Wishlists, product comparison, and sale progress bars help shoppers make decisions faster, reducing cart abandonment and increasing completed purchases.",
+        stat: "Up to 35% more conversions",
+        icon: "trending-up"
+    },
+    {
+        title: "Better Customer Experience",
+        description: "Fly Cart, Menu Cart, and streamlined checkout reduce friction at every step of the buying journey, keeping customers happy and engaged.",
+        stat: "Smoother shopping flow",
+        icon: "heart"
+    },
+    {
+        title: "Increased Average Order Value",
+        description: "Related products, quantity controls, and smart product displays encourage customers to add more items to their cart.",
+        stat: "Higher cart values",
+        icon: "dollar"
+    },
+    {
+        title: "Enhanced Brand Trust",
+        description: "Professional sale badges, custom order numbers, and branded announcement bars create a polished, trustworthy storefront.",
+        stat: "Stronger brand presence",
+        icon: "shield"
+    },
+    {
+        title: "Reduced Support Tickets",
+        description: "Product FAQs, clear pricing displays, and intuitive navigation help customers find answers independently, reducing support workload.",
+        stat: "Fewer support queries",
+        icon: "support"
+    },
+    {
+        title: "Global Market Ready",
+        description: "Multi-currency support, localized formatting, and flexible pricing options prepare your store for international customers.",
+        stat: "Sell worldwide",
+        icon: "globe"
+    }
+];
+---
+
+<BaseLayout title="Donate" description="Support Jetexir development with a cryptocurrency donation." current="donate">
+    <section class="page-hero">
+        <HeroBackground/>
+        <div class="container">
+            <h1 class="page-title">Support Jetexir</h1>
+            <p class="page-subtitle">
+                Jetexir is free and open source. If it has helped your store, consider supporting the
+                development with a cryptocurrency donation.
+            </p>
+        </div>
+    </section>
+
+    <section class="container coffee-section">
+        <div class="section-head">
+            <span class="section-kicker">حمایت مالی</span>
+            <h2 class="section-title">خرید قهوه</h2>
+            <p class="section-desc" dir="rtl" lang="fa">
+                با خرید یک فنجان قهوه از توسعه جت‌اکسیر حمایت کنید.
+            </p>
+        </div>
+
+        <div class="coffee-card">
+            <div class="crypto-icon">
+                <Icon name="coffee" height="28" width="28"/>
+            </div>
+            <div class="coffee-info">
+                <h3 class="crypto-name">daramet.com/parsakafi</h3>
+                <p> حمایت از توسعه‌دهندگان جت‌اکسیر ☕</p>
+            </div>
+            <a href="https://daramet.com/parsakafi" target="_blank" rel="noopener" class="copy-btn coffee-btn">
+                <span>خرید قهوه</span>
+                <Icon name="arrow-right" height="18" width="18"/>
+            </a>
+        </div>
+    </section>
+
+    <!-- Crypto Addresses -->
+    <section class="container crypto-section">
+        <div class="section-head">
+            <span class="section-kicker">Crypto Donations</span>
+            <h2 class="section-title">Send a Donation</h2>
+            <p class="section-desc">
+                Choose your preferred cryptocurrency and copy the address below. Every contribution
+                helps maintain and improve Jetexir.
+            </p>
+        </div>
+
+        <div class="crypto-grid">
+            {cryptoAddresses.map((crypto) => (
+                    <div class="crypto-card" data-address={crypto.address}>
+                        <div class="crypto-icon">
+                            <Icon name={crypto.icon} height="28" width="28"/>
+                        </div>
+                        <div class="crypto-info">
+                            <h3 class="crypto-name">{crypto.name}</h3>
+                            <p class="crypto-address" title={crypto.address}>{crypto.address}</p>
+                        </div>
+                        <button class="copy-btn" data-copy={crypto.address} aria-label={`Copy ${crypto.name} address`}>
+                            <Icon name="copy" height="18" width="18"/>
+                            <span class="copy-text">Copy</span>
+                        </button>
+                    </div>
+            ))}
+        </div>
+    </section>
+
+    <!-- Plugin Advantages -->
+    <section class="section advantages-section">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-kicker">Why Jetexir</span>
+                <h2 class="section-title">Built for Everyone</h2>
+                <p class="section-desc">
+                    Jetexir is designed to be accessible, powerful, and trustworthy — here's what sets it apart.
+                </p>
+            </div>
+
+            <div class="advantage-grid">
+                {advantages.map((advantage) => (
+                        <div class="advantage-card">
+                            <div class="advantage-icon">
+                                <Icon name={advantage.icon} height="24" width="24"/>
+                            </div>
+                            <h3 class="advantage-title">{advantage.title}</h3>
+                            <p class="advantage-desc">{advantage.description}</p>
+                        </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <!-- WooCommerce Store Benefits -->
+    <section class="section woocommerce-section">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-kicker">WooCommerce Benefits</span>
+                <h2 class="section-title">Grow Your Store</h2>
+                <p class="section-desc">
+                    Real impact on your store's performance, customer satisfaction, and bottom line.
+                </p>
+            </div>
+
+            <div class="benefit-grid">
+                {woocommerceBenefits.map((benefit) => (
+                        <div class="benefit-card">
+                            <div class="benefit-stat">
+                                <Icon name={benefit.icon} height="20" width="20"/>
+                                <span>{benefit.stat}</span>
+                            </div>
+                            <h3 class="benefit-title">{benefit.title}</h3>
+                            <p class="benefit-desc">{benefit.description}</p>
+                        </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <!-- Thank You CTA -->
+    <section class="section section-cta">
+        <div class="container">
+            <CtaBand
+                    title="Thank you for your support!"
+                    description="Your donation helps keep Jetexir free and actively maintained. Together, we're building the best enhancement suite for WooCommerce."
+                    primaryLabel="Download Jetexir"
+                    secondaryLabel="View on GitHub"
+            />
+        </div>
+    </section>
+</BaseLayout>
+
+<style>
+    .page-hero {
+        position: relative;
+        overflow: clip;
+        padding: 5rem 0 3rem;
+        text-align: center;
+    }
+
+    .page-hero .container {
+        position: relative;
+    }
+
+    .page-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: -0.03em;
+        margin: 0 0 1rem;
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        max-width: 42rem;
+        margin: 0 auto;
+        font-size: 1.1rem;
+        line-height: 1.7;
+    }
+
+    /* Section styles */
+    .section {
+        padding: 5rem 0;
+    }
+
+    .section-head {
+        text-align: center;
+        max-width: 44rem;
+        margin: 0 auto 3rem;
+    }
+
+    .section-kicker {
+        display: inline-block;
+        color: var(--primary);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+        letter-spacing: -0.03em;
+        margin: 0 0 0.9rem;
+    }
+
+    .section-desc {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    /* Crypto Section */
+    .crypto-section {
+        padding: 3rem 0 5rem;
+    }
+
+    .crypto-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        max-width: 56rem;
+        margin: 0 auto;
+    }
+
+    .crypto-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+        transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .crypto-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .crypto-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--icon-bg);
+        color: var(--primary);
+        flex-shrink: 0;
+    }
+
+    .crypto-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .crypto-name {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 0 0 0.25rem;
+    }
+
+    .crypto-address {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        color: var(--text-dim);
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .copy-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem 0.9rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .copy-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--icon-bg);
+    }
+
+    .copy-btn.copied {
+        border-color: var(--success);
+        color: var(--success);
+        background: rgba(22, 163, 74, 0.1);
+    }
+
+    .copy-btn .copy-text {
+        transition: opacity 0.2s ease;
+    }
+
+    /* Advantages Section */
+    .advantages-section {
+        background: var(--section-alt-bg, #f7f7fa);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .advantage-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .advantage-card {
+        padding: 1.8rem;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .advantage-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-3px);
+    }
+
+    .advantage-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--icon-bg);
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+
+    .advantage-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem;
+        letter-spacing: -0.01em;
+    }
+
+    .advantage-desc {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        line-height: 1.65;
+    }
+
+    /* WooCommerce Benefits Section */
+    .benefit-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+    }
+
+    .benefit-card {
+        padding: 1.5rem;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .benefit-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .benefit-stat {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+        background: rgba(22, 163, 74, 0.1);
+        color: var(--success);
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .benefit-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 0 0 0.4rem;
+    }
+
+    .benefit-desc {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    /* coffee Section */
+    .coffee-section {
+        padding: 3rem 0 2rem;
+
+        font-family: "Vazirmatn", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .coffee-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+        max-width: 36rem;
+        margin: 0 auto;
+        transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .coffee-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .coffee-btn {
+        text-decoration: none;
+        flex-shrink: 0;
+    }
+
+    .coffee-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .coffee-info p {
+        font-size: 0.8em;
+    }
+
+    .section-cta {
+        padding: 2rem 0 5rem;
+    }
+
+    @media (max-width: 1000px) {
+        .advantage-grid,
+        .benefit-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .crypto-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 680px) {
+        .advantage-grid,
+        .benefit-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    function setupCopyButtons() {
+        const buttons = document.querySelectorAll<HTMLButtonElement>('.copy-btn');
+
+        buttons.forEach(btn => {
+            // Remove old listeners by cloning
+            const newBtn = btn.cloneNode(true) as HTMLButtonElement;
+            btn.parentNode?.replaceChild(newBtn, btn);
+
+            newBtn.addEventListener('click', async () => {
+                const address = newBtn.dataset.copy;
+                if (!address) return;
+
+                try {
+                    await navigator.clipboard.writeText(address);
+                    newBtn.classList.add('copied');
+                    const textEl = newBtn.querySelector('.copy-text');
+                    if (textEl) textEl.textContent = 'Copied!';
+
+                    setTimeout(() => {
+                        newBtn.classList.remove('copied');
+                        if (textEl) textEl.textContent = 'Copy';
+                    }, 2000);
+                } catch (err) {
+                    // Fallback for older browsers
+                    const textarea = document.createElement('textarea');
+                    textarea.value = address;
+                    textarea.style.position = 'fixed';
+                    textarea.style.left = '-9999px';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+
+                    newBtn.classList.add('copied');
+                    const textEl = newBtn.querySelector('.copy-text');
+                    if (textEl) textEl.textContent = 'Copied!';
+
+                    setTimeout(() => {
+                        newBtn.classList.remove('copied');
+                        if (textEl) textEl.textContent = 'Copy';
+                    }, 2000);
+                }
+            });
+        });
+    }
+
+    document.addEventListener('astro:page-load', setupCopyButtons);
+</script>
