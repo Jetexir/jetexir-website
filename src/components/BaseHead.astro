@@ -28,6 +28,18 @@ const absoluteImage = new URL(image, Astro.site ?? Astro.url).href;
 // emitting a SoftwareApplication block on every page (including the 404)
 // gives search engines misleading entity data.
 const isSoftwarePage = current === 'home';
+const siteUrl = Astro.site ?? Astro.url;
+const orgSchema = {
+    "@type": "Organization",
+    "name": "Jetexir",
+    "url": new URL('/', siteUrl).href,
+    "logo": new URL('/images/logo.png', siteUrl).href,
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "hello@jetexir.ir",
+        "contactType": "customer support"
+    }
+};
 const schema = isSoftwarePage ? {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -36,17 +48,13 @@ const schema = isSoftwarePage ? {
     "operatingSystem": "WordPress",
     "description": description,
     "image": absoluteImage,
-    "url": new URL('/', Astro.site ?? Astro.url).href,
+    "url": new URL('/', siteUrl).href,
     "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
     },
-    "publisher": {
-        "@type": "Organization",
-        "name": "Jetexir",
-        "url": Astro.site
-    }
+    "publisher": orgSchema
 } : null;
 ---
 
