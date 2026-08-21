@@ -2,7 +2,7 @@
 title: Sale Progress Bar
 category: Product
 icon: sale-progress
-summary: Show how much of a sale has sold and how much stock is left to create real urgency.
+summary: Show how many units have sold and how much stock remains to create real urgency.
 order: 16
 features:
   - Display a sales progress bar on the product page

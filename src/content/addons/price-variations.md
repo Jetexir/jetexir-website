@@ -2,7 +2,7 @@
 title: Price Variations
 category: Product
 icon: price-variation
-summary: Show variable product prices the way you want, ranges, single prices, or with clear "From" prefixes.
+summary: Show variable product prices the way you want, with ranges, single prices, or clear "From" prefixes.
 order: 2
 features:
   - Choose from multiple variation price display formats

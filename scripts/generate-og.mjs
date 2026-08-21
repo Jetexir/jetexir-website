@@ -156,7 +156,7 @@ function renderCard({title, category, icon, summary}) {
   <text x="122" y="540" font-family="${FONT}" font-size="34">
     <tspan font-weight="800" fill="${INK}">Jetexir</tspan> <tspan font-weight="400" fill="${MUTED}"> for WooCommerce</tspan>
   </text>
-  <text x="1116" y="540" text-anchor="end" font-family="${FONT}" font-size="28" font-weight="400" fill="${FAINT}">jetexir.com</text>`;
+  <text x="1116" y="540" text-anchor="end" font-family="${FONT}" font-size="28" font-weight="400" fill="${FAINT}">jetexir.ir</text>`;
 
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
   <defs>${defs}
